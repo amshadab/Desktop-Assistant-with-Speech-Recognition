@@ -14,7 +14,7 @@ commands_list = [
     "close <app/system tool>",
     "ip address of my device",
     "search on wikipedia <topic>",
-    "send message",
+    "send message <message>",
     "current temperature <city_name>",
     "play video on youtube <video_name>",
     "current time",
@@ -50,22 +50,28 @@ def processcmd(command):
     f"You are a command assistant designed to help users, including those who may be illiterate or make mistakes in their input. "
     f"Your task is to interpret the user's intent and correct any spelling mistakes, command structure errors, or word choice issues. "
     f"Consider the following possibilities for mistakes:\n"
-    f"- The user might confuse 'go to' for websites and apps. If they say 'go to' followed by a website name, change it to 'open <website>' and append '.com' if not specified. For apps, return 'open <app>' or 'close <app>' as needed, but only if the app name exists in the user's installed apps, which are listed in {app_keys}.\n"
+    f"- The user might confuse 'go to' for websites and apps. If they say 'go to' followed by a website name, change it to 'go to <website>.com' if not specified. For apps, return 'open <app>' or 'close <app>' as needed, but only if the app name exists in the user's installed apps, which are listed in {app_keys}.\n"
     f"- If the user says 'open' or 'close' followed by a website name, change it to 'go to <website>.com'.\n"
     f"- Ensure the command returns the exact app name required by the AppOpener library from this list: {app_keys}. If the user provides an app name not listed in {app_keys}, inform the user that the app is not available.\n"
     f"- Match user input to the correct app name supported by the AppOpener library from {app_keys}. This includes handling common variations, abbreviations, and misspellings.\n"
-    f"- Handle spelling errors or typos in app names and correct them automatically.\n\n"
+    f"- Handle spelling errors or typos in app names and correct them automatically.\n"
+    f"- If the user says something like 'go to <website>' or 'open <website>', check if it's a website. Append '.com' if it's missing, and ensure the response is 'go to <website>.com'.\n"
+    f"- If the user says 'search on wikipedia', 'wikipedia search', or any variation of that command, return 'search on wikipedia <topic>' and extract the topic from the command.\n"
     f"- If the user only types 'AI' instead of 'AI mode', assume they meant 'AI mode'.\n"
     f"- The user might give incomplete commands. For example, 'go to google' should be interpreted as a web search, while 'search on google' should include a query if missing.\n"
-    f"- If the user says anything resembling 'help', such as 'run help function', 'show help', 'assist', or 'guide', return the 'help' command.\n\n"
+    f"- If the user says anything resembling 'help', such as 'run help function', 'show help', 'assist', or 'guide', return the 'help' command.\n"
     f"- If the user says anything resembling 'exit', 'no thanks', 'close', or any phrase indicating the intent to stop or exit the software, return 'exit'.\n\n"
     f"Commands List:\n"
     f"{commands_list}\n\n"
     f"Here is the app name mapping from the user's system (available apps):\n"
     f"{app_keys}\n\n"
     f"User Input: {command}\n\n"
-    f"Response (return 'open <app_name>' or 'close <app_name>' only if the app exists in the app_keys list, or inform the user that the app is not available if it's not in app_keys):"
+    f"Response:\n"
+    f"- If the user wants to open a website and says something like 'go to <website_name>' or 'open <website_name>', return 'go to <website_name>.com'.\n"
+    f"- For apps, return 'open <app_name>' or 'close <app_name>' if the app exists in {app_keys}, or inform the user that the app is not available if it's not in {app_keys}."
 )
+
+
 
 
 
@@ -91,5 +97,5 @@ def processcmd(command):
         print(f"Error: {e}")
         return "Command not recognized. Please try again."
     
-# print(processcmd("open chatgtp"))
+# print(processcmd("wikipedia search who is elon must"))
 # print(app_name)

@@ -15,7 +15,7 @@ import time
 
 engine = pyttsx3.init("sapi5")
 commands = ["open", "shutdown", "ip address of my device", "minimise window","close window","maximise window","go to","search on google","search on wikipedia",
-            "current temperature","send message","ai mode","sleep","restart","play video on youtube","help","close","exit"]
+            "current temperature","send message","ai mode","sleep","restart","play video on youtube","help","close","send message","exit"]
 # Text to speak function
 def speak(text):
     engine.say(text)
@@ -58,8 +58,8 @@ def wiki(query):
         result=wikipedia.summary(query,sentences=2)
         print("According to wikipedia")
         speak("According to wikipedia")
-        print(result,"for more information go to wikipedia.com")
-        speak(result,"for more information go to wikipedia.com")
+        print(f"{result} for more information go to wikipedia.com")
+        speak(f"{result} for more information go to wikipedia.com")
         
     except Exception as e:
         print("Something went wrong ",e)
@@ -100,14 +100,13 @@ def temperature(city):
         speak("Please give me valid City name")
 
 
-def send_message():
+def send_message(message):
     speak("Please provide the phone number to which I should send messages.")
-    number=takecmd().strip()
+    number=input("Enter phone no. ")
     while (len(number)<=9):
         speak(f"The provided phone number have only {len(number)} digits Please tell me again")
-        number=takecmd().strip()
-    speak(f"Please let me know what message I should send to +91{number}")
-    msg=takecmd().strip()
+        number=input("Enter phone no. ")
+    
     speak("This process may take a few seconds and during this process i can't do any other work")
     now = datetime.datetime.now()
     future_time = now + datetime.timedelta(minutes=2)
@@ -116,7 +115,7 @@ def send_message():
 
     country_code="+91"
     number=f"{country_code}{number}"
-    kit.sendwhatmsg(number, msg, time_hour, time_minute)
+    kit.sendwhatmsg(number, message, time_hour, time_minute)
 
 def open_apps(app_name):
     
@@ -352,7 +351,7 @@ def unknown_command():
 
 command_actions={
     "open":open_apps,
-    "wikipedia":wiki,
+    "search on wikipedia":wiki,
     "sleep":sleep,
     "minimise window":minimize,
     "maximize":maximize,
@@ -363,7 +362,7 @@ command_actions={
     "play video on youtube":ytvideo,
     "restart":restart,
     "sleep":sleep,
-    "search on wikipedia":wiki,
+    "send message":send_message,
     "current temperature":temperature,
     "current time":current_time,
     "ai mode":ai_mode,
