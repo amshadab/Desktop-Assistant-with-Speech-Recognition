@@ -11,13 +11,18 @@ import aiprocess as ap
 import AppOpener
 import gemini_ai
 import time
-
+import io
+import sys
 
 engine = pyttsx3.init("sapi5")
 commands = ["open", "shutdown", "ip address of my device", "minimise window","close window","maximise window","go to","search on google","search on wikipedia",
             "current temperature","send message","ai mode","sleep","restart","play video on youtube","help","close","send message","exit"]
 # Text to speak function
-def speak(text):
+def set_speech_rate(rate):
+    engine.setProperty('rate', rate)
+
+def speak(text,speed=200):
+    set_speech_rate(speed)
     engine.say(text)
     engine.runAndWait()
 
@@ -332,8 +337,16 @@ def open_website(web_name):
         
 def close_apps(app_name):
     try:
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
         speak(f"Closing {app_name}")
         AppOpener.close(app_name)
+        sys.stdout = sys.__stdout__
+        result = captured_output.getvalue().strip()
+        
+        if "not running" in result:
+            print("Sorry I can't close the app due to security concern and permission issue, If the app you want to close is your current app then try again and say close the current window")
+            speak("Sorry I can't close the app due to security concern and permission issue, If the app you want to close is your current window, then try again and say close the current window",speed=150)
     except Exception as e:
         print("Something went wrong ",e)
         speak("Something went wrong")
