@@ -18,6 +18,7 @@ commands_list = [
     "current temperature <city_name>",
     "play video on youtube <video_name>",
     "current time",
+    "current date",
     "ai mode <query>",
     "shutdown",
     "restart",
@@ -97,5 +98,5 @@ def processcmd(command):
         print(f"Error: {e}")
         return "Command not recognized. Please try again."
     
-# print(processcmd("wikipedia search who is elon must"))
+# print(processcmd("what time is it"))
 # print(app_name)

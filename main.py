@@ -13,10 +13,11 @@ import gemini_ai
 import time
 import io
 import sys
+import winsound
 
 engine = pyttsx3.init("sapi5")
 commands = ["open", "shutdown", "ip address of my device", "minimise window","close window","maximise window","go to","search on google","search on wikipedia",
-            "current temperature","send message","ai mode","sleep","restart","play video on youtube","help","close","send message","exit"]
+            "current temperature","send message","ai mode","sleep","current date","restart","play video on youtube","help","close","send message","current time","exit"]
 # Text to speak function
 def set_speech_rate(rate):
     engine.setProperty('rate', rate)
@@ -345,8 +346,8 @@ def close_apps(app_name):
         result = captured_output.getvalue().strip()
         
         if "not running" in result:
-            print("Sorry I can't close the app due to security concern and permission issue, If the app you want to close is your current app then try again and say close the current window")
-            speak("Sorry I can't close the app due to security concern and permission issue, If the app you want to close is your current window, then try again and say close the current window",speed=150)
+            print("Sorry I can't close the app due to security concern and permission issues, If the app you want to close is your current app then try again and say close the current window")
+            speak("Sorry I can't close the app due to security concern and permission issues, If the app you want to close is your current window, then try again and say close the current window",speed=150)
     except Exception as e:
         print("Something went wrong ",e)
         speak("Something went wrong")
@@ -355,9 +356,18 @@ def ai_mode(query):
     gemini_ai.aispeechmode(query)
 
 def current_time():
-    time=datetime.datetime.now().time()
+    time = datetime.datetime.now().strftime("%I:%M %p") 
     print(time)
-    speak(time)
+    speak(f"The current time is {time}")
+
+def set_alarms(alarm_time):
+    pass
+    
+
+def current_date():
+    date=date=datetime.datetime.now().strftime("%B %d, %Y")
+    print(f"Today's date is {date}")
+    speak(f"Today's date is {date}")
 
 def unknown_command():
     pass
@@ -375,6 +385,7 @@ command_actions={
     "play video on youtube":ytvideo,
     "restart":restart,
     "sleep":sleep,
+    "current date":current_date,
     "send message":send_message,
     "current temperature":temperature,
     "current time":current_time,
