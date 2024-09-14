@@ -1,0 +1,10 @@
+google-generativeai
+AppOpener
+pyttsx3
+SpeechRecognition
+wikipedia
+pywhatkit
+pygetwindow
+requests
+pyaudio
+setuptools
