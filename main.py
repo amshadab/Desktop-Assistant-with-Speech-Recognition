@@ -336,6 +336,7 @@ def open_website(web_name):
         print(f"Failed to open {web_name}. Error: {e}")
         speak(f"Failed to open {web_name}")
         
+        
 def close_apps(app_name):
     try:
         captured_output = io.StringIO()
