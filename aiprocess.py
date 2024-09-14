@@ -45,16 +45,14 @@ def processcmd(command):
     
     app_keys=scanapp()
     
-<<<<<<< HEAD
+
     with open('task.json', 'r') as file:
         task_data = json.load(file)
 
 # Convert the JSON data to a formatted string
     json_data_str = json.dumps(task_data, indent=2)
 
-=======
-        
->>>>>>> origin/master
+
     # Refined prompt that asks the AI to match input with the correct command from the list
     prompt = (
     f"You are a command assistant designed to help users, including those who may be illiterate or make mistakes in their input. "
@@ -75,11 +73,10 @@ def processcmd(command):
     f"{commands_list}\n\n"
     f"Here is the app name mapping from the user's system (available apps):\n"
     f"{app_keys}\n\n"
-<<<<<<< HEAD
+
     f"Task Data:\n"
     f"{json_data_str}\n\n"
-=======
->>>>>>> origin/master
+
     f"User Input: {command}\n\n"
     f"Response:\n"
     f"- If the user wants to open a website and says something like 'go to <website_name>' or 'open <website_name>', return 'go to <website_name>.com'.\n"
@@ -89,12 +86,8 @@ def processcmd(command):
 
 
 
-<<<<<<< HEAD
-=======
 
 
-
->>>>>>> origin/master
     try:
         # Send the refined prompt to the AI
         response = chat.send_message(prompt)
