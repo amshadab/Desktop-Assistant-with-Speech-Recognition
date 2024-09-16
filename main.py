@@ -361,8 +361,25 @@ def current_time():
     print(time)
     speak(f"The current time is {time}")
 
-def set_alarms(alarm_time):
-    pass
+def exit_fucntion():
+    now = int(datetime.datetime.now().hour)
+    
+    if 5 <= now < 12:
+        print ("Goodbye! Have a great day ahead!")
+        speak("Goodbye! Have a great day ahead!")
+        exit()
+    elif 12 <= now< 17:
+        print("Goodbye! Have a wonderful afternoon!")
+        speak("Goodbye! Have a wonderful afternoon!")
+        exit()
+    elif 17 <= now < 21:
+        print("Goodbye! Have a pleasant evening!")
+        speak("Goodbye! Have a pleasant evening!")
+        exit()
+    else:
+        print("Goodbye! Have a restful night!")
+        speak("Goodbye! Have a restful night!")
+        exit()
     
 
 def current_date():
@@ -370,8 +387,9 @@ def current_date():
     print(f"Today's date is {date}")
     speak(f"Today's date is {date}")
 
-def unknown_command():
-    pass
+def default_fucntion(query):
+    print(query)
+    speak(query)
 
 command_actions={
     "open":open_apps,
@@ -393,7 +411,7 @@ command_actions={
     "ai mode":ai_mode,
     "help":help_function,
     "close":close_apps,
-    "exit":exit
+    "exit":exit_fucntion
 }
 
 if __name__ == "__main__":
@@ -408,9 +426,13 @@ if __name__ == "__main__":
         query=ap.processcmd(query)
         command,param=process_airesponse(query)
         
+        if command==None and param==None:
+            default_fucntion(query)
+        
+        
         try:
             if command:
-                action = command_actions.get(command, unknown_command)
+                action = command_actions.get(command)
                 if param:
                     action(param)  # If there is a parameter, pass it to the function
                 else:

@@ -55,7 +55,7 @@ def processcmd(command):
 
     # Refined prompt that asks the AI to match input with the correct command from the list
     prompt = (
-    f"You are a command assistant designed to help users, including those who may be illiterate or make mistakes in their input. "
+    f"Your name is NOVA, You are a command assistant designed to help users, including those who may be illiterate or make mistakes in their input. "
     f"Your task is to interpret the user's intent and correct any spelling mistakes, command structure errors, or word choice issues. "
     f"Consider the following possibilities for mistakes:\n"
     f"- The user might confuse 'go to' for websites and apps. If they say 'go to' followed by a website name, change it to 'go to <website>.com' if not specified. For apps, return 'open <app>' or 'close <app>' as needed, but only if the app name exists in the user's installed apps, which are listed in {app_keys}.\n"

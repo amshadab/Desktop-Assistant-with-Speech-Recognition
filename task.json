@@ -137,7 +137,7 @@
       },
       {
         "command": "close window",
-        "description": "Closes the active window.",
+        "description": "Closes the active or current window.",
         "examples": [
           {"user_input": "close it", "assistant_output": "close window"},
           {"user_input": "exit the window", "assistant_output": "close window"}
