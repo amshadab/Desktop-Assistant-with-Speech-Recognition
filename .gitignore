@@ -1,9 +1,7 @@
 .venv
 tempCodeRunnerFile.py
 PyWhatKit_DB.txt
-<<<<<<< HEAD
 tp.py
 desktop-assistant-a066c-firebase-adminsdk-t7095-56c262cf5a.json
-=======
-tp.py
->>>>>>> origin/master
+firstwindow.py
+userlogin.png
