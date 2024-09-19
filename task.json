@@ -1,164 +1,171 @@
 {
-    "commands": [
-      {
-        "command": "go to <website name>",
-        "description": "Opens the website in the browser. The assistant will append '.com' if not specified.",
-        "examples": [
-          {"user_input": "go to amazn", "assistant_output": "go to amazon.com"},
-          {"user_input": "open google", "assistant_output": "go to google.com"}
-        ]
-      },
-      {
-        "command": "search on google <query>",
-        "description": "Performs a Google search with the specified query.",
-        "examples": [
-          {"user_input": "searhc python tutorials", "assistant_output": "search on google python tutorials"},
-          {"user_input": "find AI tech", "assistant_output": "search on google AI tech"}
-        ]
-      },
-      {
-        "command": "open <app/system tool>",
-        "description": "Opens the specified application or system tool if available.",
-        "examples": [
-          {"user_input": "opne calclator", "assistant_output": "open calculator"},
-          {"user_input": "launch notepad", "assistant_output": "open notepad"}
-        ]
-      },
-      {
-        "command": "close <app/system tool>",
-        "description": "Closes the specified application or system tool.",
-        "examples": [
-          {"user_input": "shut down notepad", "assistant_output": "close notepad"},
-          {"user_input": "end calclator", "assistant_output": "close calculator"}
-        ]
-      },
-      {
-        "command": "ip address of my device",
-        "description": "Provides the IP address of the user's device.",
-        "examples": [
-          {"user_input": "ip addres my divice", "assistant_output": "ip address of my device"}
-        ]
-      },
-      {
-        "command": "search on wikipedia <topic>",
-        "description": "Searches Wikipedia for the specified topic.",
-        "examples": [
-          {"user_input": "wikipedia Elon musk", "assistant_output": "search on wikipedia Elon Musk"},
-          {"user_input": "wiki python langauge", "assistant_output": "search on wikipedia Python Language"}
-        ]
-      },
-      {
-        "command": "send message <message>",
-        "description": "Sends a message via WhatsApp after receiving the phone number and message.",
-        "examples": [
-          {"user_input": "send massage to John hw are you", "assistant_output": "send message to John: Hello, how are you?"},
-          {"user_input": "whatsapp msg Jane hey there", "assistant_output": "send message to Jane: Hey there!"}
-        ]
-      },
-      {
-        "command": "current temperature <city_name>",
-        "description": "Provides the current temperature for the specified city.",
-        "examples": [
-          {"user_input": "wether today", "assistant_output": "current temperature in your location"},
-          {"user_input": "temp in NY", "assistant_output": "current temperature in New York"}
-        ]
-      },
-      {
-        "command": "play video on youtube <video_name>",
-        "description": "Plays the specified video on YouTube.",
-        "examples": [
-          {"user_input": "plai video Despaceto", "assistant_output": "play video on youtube Despacito"},
-          {"user_input": "youtube Python tutorial", "assistant_output": "play video on youtube Python tutorial"}
-        ]
-      },
-      {
-        "command": "current time",
-        "description": "Provides the current time.",
-        "examples": [
-          {"user_input": "time now", "assistant_output": "current time"},
-          {"user_input": "tell me the time", "assistant_output": "current time"}
-        ]
-      },
-      {
-        "command": "current date",
-        "description": "Provides the current date.",
-        "examples": [
-          {"user_input": "what is today's date", "assistant_output": "current date"},
-          {"user_input": "date today", "assistant_output": "current date"}
-        ]
-      },
-      {
-        "command": "ai mode <query>",
-        "description": "Processes a query using AI mode.",
-        "examples": [
-          {"user_input": "AI mod calcualte 2 plus 2", "assistant_output": "AI mode: calculate 2 plus 2"},
-          {"user_input": "AI what is the capital of France", "assistant_output": "AI mode: what is the capital of France"}
-        ]
-      },
-      {
-        "command": "shutdown",
-        "description": "Shuts down the system.",
-        "examples": [
-          {"user_input": "shutdwn", "assistant_output": "shutdown"},
-          {"user_input": "power off", "assistant_output": "shutdown"}
-        ]
-      },
-      {
-        "command": "restart",
-        "description": "Restarts the system.",
-        "examples": [
-          {"user_input": "restert", "assistant_output": "restart"},
-          {"user_input": "reboot", "assistant_output": "restart"}
-        ]
-      },
-      {
-        "command": "sleep",
-        "description": "Puts the system into sleep mode.",
-        "examples": [
-          {"user_input": "go to sleep mode", "assistant_output": "sleep"},
-          {"user_input": "sleep computer", "assistant_output": "sleep"}
-        ]
-      },
-      {
-        "command": "minimise window",
-        "description": "Minimizes the active window.",
-        "examples": [
-          {"user_input": "minimize the window", "assistant_output": "minimise window"},
-          {"user_input": "make the window small", "assistant_output": "minimise window"}
-        ]
-      },
-      {
-        "command": "maximise window",
-        "description": "Maximizes the active window.",
-        "examples": [
-          {"user_input": "maximize", "assistant_output": "maximise window"},
-          {"user_input": "fullscreen window", "assistant_output": "maximise window"}
-        ]
-      },
-      {
-        "command": "close window",
-        "description": "Closes the active or current window.",
-        "examples": [
-          {"user_input": "close it", "assistant_output": "close window"},
-          {"user_input": "exit the window", "assistant_output": "close window"}
-        ]
-      },
-      {
-        "command": "help",
-        "description": "Displays help for available commands.",
-        "examples": [
-          {"user_input": "show help", "assistant_output": "help"},
-          {"user_input": "assist me", "assistant_output": "help"}
-        ]
-      },
-      {
-        "command": "exit",
-        "description": "Exits the assistant.",
-        "examples": [
-          {"user_input": "no thanks", "assistant_output": "exit"},
-          {"user_input": "close assistant", "assistant_output": "exit"}
-        ]
-      }
-    ]
-  }
-  
+  "commands": [
+    {
+      "command": "go to <website name>",
+      "description": "Opens the website in the browser. The assistant will append '.com' if not specified.",
+      "examples": [
+        {"user_input": "go to amazn", "assistant_output": "go to amazon.com"},
+        {"user_input": "open google", "assistant_output": "go to google.com"}
+      ]
+    },
+    {
+      "command": "search on google <query>",
+      "description": "Performs a Google search with the specified query.",
+      "examples": [
+        {"user_input": "searhc python tutorials", "assistant_output": "search on google python tutorials"},
+        {"user_input": "find AI tech", "assistant_output": "search on google AI tech"}
+      ]
+    },
+    {
+      "command": "open <app/system tool>",
+      "description": "Opens the specified application or system tool if available.",
+      "examples": [
+        {"user_input": "opne calclator", "assistant_output": "open calculator"},
+        {"user_input": "launch notepad", "assistant_output": "open notepad"}
+      ]
+    },
+    {
+      "command": "close <app/system tool>",
+      "description": "Closes the specified application or system tool.",
+      "examples": [
+        {"user_input": "shut down notepad", "assistant_output": "close notepad"},
+        {"user_input": "end calclator", "assistant_output": "close calculator"}
+      ]
+    },
+    {
+      "command": "ip address of my device",
+      "description": "Provides the IP address of the user's device.",
+      "examples": [
+        {"user_input": "ip addres my divice", "assistant_output": "ip address of my device"}
+      ]
+    },
+    {
+      "command": "search on wikipedia <topic>",
+      "description": "Searches Wikipedia for the specified topic.",
+      "examples": [
+        {"user_input": "wikipedia Elon musk", "assistant_output": "search on wikipedia Elon Musk"},
+        {"user_input": "wiki python langauge", "assistant_output": "search on wikipedia Python Language"}
+      ]
+    },
+    {
+      "command": "send message <message>",
+      "description": "Sends a message via WhatsApp after receiving the phone number and message.",
+      "examples": [
+        {"user_input": "send massage to John hw are you", "assistant_output": "send message to John: Hello, how are you?"},
+        {"user_input": "whatsapp msg Jane hey there", "assistant_output": "send message to Jane: Hey there!"}
+      ]
+    },
+    {
+      "command": "current temperature <city_name>",
+      "description": "Provides the current temperature for the specified city.",
+      "examples": [
+        {"user_input": "wether today", "assistant_output": "current temperature in your location"},
+        {"user_input": "temp in NY", "assistant_output": "current temperature in New York"}
+      ]
+    },
+    {
+      "command": "play video on youtube <video_name>",
+      "description": "Plays the specified video on YouTube.",
+      "examples": [
+        {"user_input": "plai video Despaceto", "assistant_output": "play video on youtube Despacito"},
+        {"user_input": "youtube Python tutorial", "assistant_output": "play video on youtube Python tutorial"}
+      ]
+    },
+    {
+      "command": "current time",
+      "description": "Provides the current time.",
+      "examples": [
+        {"user_input": "time now", "assistant_output": "current time"},
+        {"user_input": "tell me the time", "assistant_output": "current time"}
+      ]
+    },
+    {
+      "command": "current date",
+      "description": "Provides the current date.",
+      "examples": [
+        {"user_input": "what is today's date", "assistant_output": "current date"},
+        {"user_input": "date today", "assistant_output": "current date"}
+      ]
+    },
+    {
+      "command": "ai mode <query>",
+      "description": "Processes a query using AI mode.",
+      "examples": [
+        {"user_input": "AI mod calcualte 2 plus 2", "assistant_output": "AI mode: calculate 2 plus 2"},
+        {"user_input": "AI what is the capital of France", "assistant_output": "AI mode: what is the capital of France"}
+      ]
+    },
+    {
+      "command": "shutdown",
+      "description": "Shuts down the system.",
+      "examples": [
+        {"user_input": "shutdwn", "assistant_output": "shutdown"},
+        {"user_input": "power off", "assistant_output": "shutdown"}
+      ]
+    },
+    {
+      "command": "restart",
+      "description": "Restarts the system.",
+      "examples": [
+        {"user_input": "restert", "assistant_output": "restart"},
+        {"user_input": "reboot", "assistant_output": "restart"}
+      ]
+    },
+    {
+      "command": "sleep",
+      "description": "Puts the system into sleep mode.",
+      "examples": [
+        {"user_input": "go to sleep mode", "assistant_output": "sleep"},
+        {"user_input": "sleep computer", "assistant_output": "sleep"}
+      ]
+    },
+    {
+      "command": "minimise window",
+      "description": "Minimizes the active window.",
+      "examples": [
+        {"user_input": "minimize the window", "assistant_output": "minimise window"},
+        {"user_input": "make the window small", "assistant_output": "minimise window"}
+      ]
+    },
+    {
+      "command": "maximise window",
+      "description": "Maximizes the active window.",
+      "examples": [
+        {"user_input": "maximize", "assistant_output": "maximise window"},
+        {"user_input": "fullscreen window", "assistant_output": "maximise window"}
+      ]
+    },
+    {
+      "command": "close window",
+      "description": "Closes the active or current window.",
+      "examples": [
+        {"user_input": "close it", "assistant_output": "close window"},
+        {"user_input": "exit the window", "assistant_output": "close window"}
+      ]
+    },
+    {
+      "command": "help",
+      "description": "Displays help for available commands.",
+      "examples": [
+        {"user_input": "show help", "assistant_output": "help"},
+        {"user_input": "assist me", "assistant_output": "help"}
+      ]
+    },
+    {
+      "command": "exit",
+      "description": "Exits the assistant.",
+      "examples": [
+        {"user_input": "no thanks", "assistant_output": "exit"},
+        {"user_input": "close assistant", "assistant_output": "exit"}
+      ]
+    },
+    {
+      "command": "battery",
+      "description": "Provides the current battery percentage of the device.",
+      "examples": [
+        {"user_input": "battery percentage", "assistant_output": "battery"},
+        {"user_input": "how much battery is left", "assistant_output": "battery"}
+      ]
+    }
+  ]
+}

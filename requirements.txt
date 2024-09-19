@@ -8,3 +8,4 @@ pygetwindow
 requests
 pyaudio
 setuptools
+keyboard

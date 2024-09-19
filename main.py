@@ -13,11 +13,12 @@ import gemini_ai
 import time
 import io
 import sys
-import winsound
+import keyboard
+import psutil
 
 engine = pyttsx3.init("sapi5")
 commands = ["open", "shutdown", "ip address of my device", "minimise window","close window","maximise window","go to","search on google","search on wikipedia",
-            "current temperature","send message","ai mode","sleep","current date","restart","play video on youtube","help","close","send message","current time","exit"]
+            "current temperature","send message","ai mode","sleep","current date","restart","play video on youtube","help","close","send message","battery","current time","exit"]
 # Text to speak function
 def set_speech_rate(rate):
     engine.setProperty('rate', rate)
@@ -157,6 +158,25 @@ def restart():
     except Exception as e:
         print("Something went wrong",e)
         speak("Something went wrong")
+    
+def battery():
+    try:
+        battery = psutil.sensors_battery()
+        if battery is not None:
+            percentage = battery.percent
+            plugged = battery.power_plugged
+            if plugged:
+                status="is"
+            else:
+                status="is Not"
+            print(f"Your current battery percentage is {percentage}% and currently charger {status} Plugged In")
+            speak(f"Your current battery percentage is {percentage}% and currently charger {status} Plugged In")
+        else:
+            print("Battery not found")
+            speak("Battery not found")  
+    except Exception as e:
+        print("Something went Wrong",e)
+        speak("Something went Wrong")
     
 
 def help_function():
@@ -409,6 +429,7 @@ command_actions={
     "current temperature":temperature,
     "current time":current_time,
     "ai mode":ai_mode,
+    "battery":battery,
     "help":help_function,
     "close":close_apps,
     "exit":exit_fucntion
@@ -419,6 +440,8 @@ if __name__ == "__main__":
     speak("How can I help you, Sir?")
     
     while True:
+        
+     
         
         query = takecmd().lower()
         if query=="none":

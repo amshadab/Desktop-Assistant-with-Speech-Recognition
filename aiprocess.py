@@ -18,6 +18,7 @@ commands_list = [
     "current temperature <city_name>",
     "play video on youtube <video_name>",
     "current time",
+    "battery",
     "current date",
     "ai mode <query>",
     "shutdown",
