@@ -24,6 +24,9 @@ commands_list = [
     "shutdown",
     "restart",
     "sleep",
+    "mute",
+    "unmute",
+    "Incomplete command: <correct_command>",
     "minimise window",
     "maximise window",
     "close window",
@@ -68,21 +71,22 @@ def processcmd(command):
     f"- If the user says 'search on wikipedia', 'wikipedia search', or any variation of that command, return 'search on wikipedia <topic>' and extract the topic from the command.\n"
     f"- If the user only types 'AI' instead of 'AI mode', assume they meant 'AI mode'.\n"
     f"- The user might give incomplete commands. For example, 'go to google' should be interpreted as a web search, while 'search on google' should include a query if missing.\n"
+    f"- If the user gives an incomplete command, such as 'open app' without specifying the app, respond with 'Incomplete command: open <app_name>'. This will guide the user towards the correct format.\n"
     f"- If the user says anything resembling 'help', such as 'run help function', 'show help', 'assist', or 'guide', return the 'help' command.\n"
     f"- If the user says anything resembling 'exit', 'no thanks', 'close', or any phrase indicating the intent to stop or exit the software, return 'exit'.\n\n"
     f"Commands List:\n"
     f"{commands_list}\n\n"
     f"Here is the app name mapping from the user's system (available apps):\n"
     f"{app_keys}\n\n"
-
     f"Task Data:\n"
     f"{json_data_str}\n\n"
-
     f"User Input: {command}\n\n"
     f"Response:\n"
     f"- If the user wants to open a website and says something like 'go to <website_name>' or 'open <website_name>', return 'go to <website_name>.com'.\n"
-    f"- For apps, return 'open <app_name>' or 'close <app_name>' if the app exists in {app_keys}, or inform the user that the app is not available if it's not in {app_keys}."
+    f"- For apps, return 'open <app_name>' or 'close <app_name>' if the app exists in {app_keys}, or inform the user that the app is not available if it's not in {app_keys}.\n"
+    f"- If the command is incomplete, return 'Incomplete command: <correct_command>'."
 )
+
 
 
 

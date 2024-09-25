@@ -13,12 +13,15 @@ import gemini_ai
 import time
 import io
 import sys
-import keyboard
 import psutil
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+from comtypes import CLSCTX_ALL
+from ctypes import cast, POINTER
+
 
 engine = pyttsx3.init("sapi5")
 commands = ["open", "shutdown", "ip address of my device", "minimise window","close window","maximise window","go to","search on google","search on wikipedia",
-            "current temperature","send message","ai mode","sleep","current date","restart","play video on youtube","help","close","send message","battery","current time","exit"]
+            "current temperature","send message","ai mode","sleep","current date","restart","play video on youtube","help","close","send message","battery","current time","Incomplete","mute","unmute","exit"]
 # Text to speak function
 def set_speech_rate(rate):
     engine.setProperty('rate', rate)
@@ -124,6 +127,10 @@ def send_message(message):
     number=f"{country_code}{number}"
     kit.sendwhatmsg(number, message, time_hour, time_minute)
 
+def incomplete_command(complete_command):
+    print(f"The command you provide is incomplete command, the complete {complete_command}")
+    speak(f"The command you provide is incomplete command, the complete {complete_command}")
+
 def open_apps(app_name):
     
     try:
@@ -136,6 +143,32 @@ def open_apps(app_name):
         
         
         
+def mute():
+    try:
+        devices = AudioUtilities.GetSpeakers()
+        interface = devices.Activate(
+        IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+        volume = cast(interface, POINTER(IAudioEndpointVolume))
+        volume.SetMute(1, None)
+        print("System muted!")
+    except Exception as e:
+        print("Something went wrong",e)
+        speak("Something went wrong")
+
+
+def unmute():
+    try:
+        devices = AudioUtilities.GetSpeakers()
+        interface = devices.Activate(
+        IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+        volume = cast(interface, POINTER(IAudioEndpointVolume))
+    # Unmute the system
+        volume.SetMute(0, None)
+        print("System unmuted!")
+        speak("System unmuted!")
+    except Exception as e:
+        print("Something went wrong", e)
+        speak("Something went wrong")
 
 def process_airesponse(response):
     for command in commands:
@@ -424,6 +457,8 @@ command_actions={
     "play video on youtube":ytvideo,
     "restart":restart,
     "sleep":sleep,
+    "mute":mute,
+    "unmute":unmute,
     "current date":current_date,
     "send message":send_message,
     "current temperature":temperature,
@@ -432,6 +467,7 @@ command_actions={
     "battery":battery,
     "help":help_function,
     "close":close_apps,
+    "Incomplete":incomplete_command,
     "exit":exit_fucntion
 }
 

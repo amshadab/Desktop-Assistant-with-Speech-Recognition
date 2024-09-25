@@ -21,7 +21,8 @@
       "description": "Opens the specified application or system tool if available.",
       "examples": [
         {"user_input": "opne calclator", "assistant_output": "open calculator"},
-        {"user_input": "launch notepad", "assistant_output": "open notepad"}
+        {"user_input": "launch notepad", "assistant_output": "open notepad"},
+        {"user_input": "open", "assistant_output": "Incomplete command: open <app_name>"}
       ]
     },
     {
@@ -127,44 +128,21 @@
         {"user_input": "make the window small", "assistant_output": "minimise window"}
       ]
     },
+    
     {
-      "command": "maximise window",
-      "description": "Maximizes the active window.",
+      "command": "mute volume",
+      "description": "Mutes system volume.",
       "examples": [
-        {"user_input": "maximize", "assistant_output": "maximise window"},
-        {"user_input": "fullscreen window", "assistant_output": "maximise window"}
+        {"user_input": "shut sound", "assistant_output": "mute"},
+        {"user_input": "mute audio", "assistant_output": "mute"}
       ]
     },
     {
-      "command": "close window",
-      "description": "Closes the active or current window.",
+      "command": "unmute volume",
+      "description": "Mutes system volume.",
       "examples": [
-        {"user_input": "close it", "assistant_output": "close window"},
-        {"user_input": "exit the window", "assistant_output": "close window"}
-      ]
-    },
-    {
-      "command": "help",
-      "description": "Displays help for available commands.",
-      "examples": [
-        {"user_input": "show help", "assistant_output": "help"},
-        {"user_input": "assist me", "assistant_output": "help"}
-      ]
-    },
-    {
-      "command": "exit",
-      "description": "Exits the assistant.",
-      "examples": [
-        {"user_input": "no thanks", "assistant_output": "exit"},
-        {"user_input": "close assistant", "assistant_output": "exit"}
-      ]
-    },
-    {
-      "command": "battery",
-      "description": "Provides the current battery percentage of the device.",
-      "examples": [
-        {"user_input": "battery percentage", "assistant_output": "battery"},
-        {"user_input": "how much battery is left", "assistant_output": "battery"}
+        {"user_input": "shut sound", "assistant_output": "mute"},
+        {"user_input": "mute audio", "assistant_output": "mute"}
       ]
     }
   ]
