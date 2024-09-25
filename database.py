@@ -60,7 +60,7 @@ def log_in(email, password):
 
 # Example Usage:
 # Sign up a new user
-sign_up("neser@example.com", "strongpassword123", "John", "Doe", "Male")
+# sign_up("neser@example.com", "strongpassword123", "John", "Doe", "Male")
 
 # Log in the user
 # log_in("newuser@example.com", "strongpassword123")
