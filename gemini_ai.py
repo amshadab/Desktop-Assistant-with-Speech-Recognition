@@ -1,7 +1,7 @@
 import google.generativeai as ai
 from google.generativeai.types.generation_types import StopCandidateException
+from config import API_KEY
 
-API_KEY = 'AIzaSyBrG3q6aHVMvmN-liNyOT-weTADMlouhmo'
 
 # Configure the API
 ai.configure(api_key=API_KEY)

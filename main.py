@@ -286,7 +286,7 @@ def help_function():
         "If you need help with a specific command or have any questions, just ask!"
     )
     print(help_text)
-    speak(help_text)
+    
           
   
 
@@ -434,7 +434,11 @@ def exit_fucntion():
         speak("Goodbye! Have a restful night!")
         exit()
     
-
+def query_fucn(answer):
+    print(answer)
+    speak(answer)
+    
+    
 def current_date():
     date=date=datetime.datetime.now().strftime("%B %d, %Y")
     print(f"Today's date is {date}")
@@ -442,7 +446,7 @@ def current_date():
 
 def default_fucntion(query):
     print(query)
-    speak(query)
+    # speak(query)
 
 command_actions={
     "open":open_apps,
