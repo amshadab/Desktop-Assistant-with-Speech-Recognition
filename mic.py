@@ -475,14 +475,12 @@ command_actions={
     "exit":exit_fucntion
 }
 
-if __name__ == "__main__":
+
+def microphone():
     wish()
     speak("How can I help you, Sir?")
     
     while True:
-        
-     
-        
         query = takecmd().lower()
         if query=="none":
             continue
@@ -491,8 +489,7 @@ if __name__ == "__main__":
         
         if command==None and param==None:
             default_fucntion(query)
-        
-        
+
         try:
             if command:
                 action = command_actions.get(command)
@@ -502,11 +499,11 @@ if __name__ == "__main__":
                     action()
         except Exception as e:
             print(e)
-        
-        
         time.sleep(5)
         speak("Sir, Do you have any other work")
-    
+
+if __name__ == "__main__":
+    microphone()
     
         
     
