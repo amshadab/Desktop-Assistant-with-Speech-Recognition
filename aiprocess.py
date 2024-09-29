@@ -87,7 +87,7 @@ f"Response:\n"
 f"- If the user wants to open a website and says something like 'go to <website_name>' or 'open <website_name>', return 'go to <website_name>.com'.\n"
 f"- For apps, return 'open <app_name>' or 'close <app_name>' if the app exists in {app_keys}, or inform the user that the app is not available if it's not in {app_keys}.\n"
 f"- If the command is incomplete, return 'Incomplete command: <correct_command>'.\n"
-f"- If the user asks a question that doesn’t match any predefined commands, return 'Query: <answer>'."
+f"- If the user asks a question that doesn’t match any predefined commands, return 'AI mode: <answer>'."
     )
 
 
