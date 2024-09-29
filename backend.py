@@ -530,8 +530,11 @@ def keyboard():
         speak("Sir, Do you have any other work")
 
 if __name__ == "__main__":
-    # microphone()
-    keyboard()
+    microphone()
+    # keyboard()
+    
+    
+    
     
         
     
