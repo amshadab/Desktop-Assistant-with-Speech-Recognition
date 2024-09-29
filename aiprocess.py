@@ -37,18 +37,17 @@ commands_list = [
 ]
 
 # Configure the API once globally to avoid redundant setup
-ai.configure(api_key=API_KEY)
-
-# Create a new model and chat object once
-model = ai.GenerativeModel("gemini-pro")
-chat = model.start_chat()
 
 def scanapp():
     app_keys=AppOpener.give_appnames()
     return app_keys
 
 def processcmd(command):
-    
+    ai.configure(api_key=API_KEY)
+
+# Create a new model and chat object once
+    model = ai.GenerativeModel("gemini-pro")
+    chat = model.start_chat()
     app_keys=scanapp()
     
 

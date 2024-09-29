@@ -4,16 +4,17 @@ from config import API_KEY
 
 
 # Configure the API
-ai.configure(api_key=API_KEY)
 
-# Create a new model
-model = ai.GenerativeModel("gemini-pro")
-chat = model.start_chat()
 
 # Start a conversation
 
 def aispeechmode(query):
 
+    ai.configure(api_key=API_KEY)
+
+# Create a new model and chat object once
+    model = ai.GenerativeModel("gemini-pro")
+    chat = model.start_chat()
     try:
         # Send message to the API
         response = chat.send_message(query)

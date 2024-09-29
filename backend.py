@@ -482,6 +482,33 @@ def microphone():
     
     while True:
         query = takecmd().lower()
+        user_query=query
+        if query=="none":
+            continue
+        query=ap.processcmd(query)
+        command,param=process_airesponse(query)
+        
+        if command==None and param==None:
+            default_fucntion(query)
+
+        try:
+            if command:
+                action = command_actions.get(command)
+                if param:
+                    action(param)  # If there is a parameter, pass it to the function
+                else:
+                    action()
+        except Exception as e:
+            print(e)
+        time.sleep(5)
+        speak("Sir, Do you have any other work")
+
+def keyboard():
+    wish()
+    speak("How can I help you, Sir?")
+    
+    while True:
+        query =input("Enter your query: ")
         if query=="none":
             continue
         query=ap.processcmd(query)
@@ -503,7 +530,8 @@ def microphone():
         speak("Sir, Do you have any other work")
 
 if __name__ == "__main__":
-    microphone()
+    # microphone()
+    keyboard()
     
         
     
