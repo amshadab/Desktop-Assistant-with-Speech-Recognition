@@ -96,18 +96,23 @@ def ytvideo(video_name):
         speak("Something went wrong")
 
 def temperature(city):
-    api_key="167b7128744c43ab8e9105629241307"
-    url=f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}"
-    r=requests.get(url)
-    wdata=r.json()
-    if "main" in wdata:
-        temp_k = wdata['main']['temp']
-        temp_c = temp_k - 273.15
-        print(f"Current temperature in {city} is {temp_c:.2f}° C")
-        speak(f"Current temperature in {city} is {temp_c:.2f}° C")
+    api_key = "167b7128744c43ab8e9105629241307"  # replace with your actual WeatherAPI key
+    base_url = "http://api.weatherapi.com/v1/current.json"
+    
+    complete_url = f"{base_url}?key={api_key}&q={city}"
+    response = requests.get(complete_url)
+    weather_data = response.json()
+    
+    if "error" not in weather_data:
+        # Extract temperature
+        temp_celsius = weather_data['current']['temp_c']
+        condition = weather_data['current']['condition']['text']
+        
+        print(f"The temperature in {city} is {temp_celsius}°C with {condition}.")
+        speak(f"The temperature in {city} is {temp_celsius}°C with {condition}.")
     else:
-        print("Please give me valid City name")
-        speak("Please give me valid City name")
+        print(f"Please enter valid city name")
+        speak("please enter valid city name")
 
 
 def send_message(message):
@@ -446,7 +451,7 @@ def current_date():
 
 def default_fucntion(query):
     print(query)
-    # speak(query)
+    speak(query)
 
 command_actions={
     "open":open_apps,
