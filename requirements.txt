@@ -9,3 +9,5 @@ requests
 pyaudio
 setuptools
 pycaw
+firebase-admin
+pyrebase4
