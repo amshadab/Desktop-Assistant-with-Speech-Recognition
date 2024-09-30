@@ -96,7 +96,7 @@ def ytvideo(video_name):
         speak("Something went wrong")
 
 def temperature(city):
-    api_key="e1d983b04e077c29b80e04718e8ac714"
+    api_key="167b7128744c43ab8e9105629241307"
     url=f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}"
     r=requests.get(url)
     wdata=r.json()
@@ -530,8 +530,8 @@ def keyboard():
         speak("Sir, Do you have any other work")
 
 if __name__ == "__main__":
-    microphone()
-    # keyboard()
+    # microphone()
+    keyboard()
     
     
     
