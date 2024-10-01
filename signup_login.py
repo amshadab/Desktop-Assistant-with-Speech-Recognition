@@ -264,7 +264,7 @@ class Ui_MainWindow(object):
         
         result=db.sign_up(email,confirm_password,first_name,last_name,gender)
         
-        if result==0:
+        if len(result) == 28:
             QMessageBox.information(self.centralwidget, "Success", "Signup successful!")
         else:
             QMessageBox.information(self.centralwidget, "Something Wrong", f"{result}")
@@ -273,7 +273,7 @@ class Ui_MainWindow(object):
         login_email,password=self.onLoginChanged()
         result=db.log_in(login_email,password)
         
-        if result==0:
+        if len(result) == 28:
             QMessageBox.information(self.centralwidget, "Success", "Log in successful!")
         else:
             QMessageBox.information(self.centralwidget, "Something Wrong", f"{result}")

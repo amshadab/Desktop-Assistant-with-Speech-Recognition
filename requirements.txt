@@ -11,3 +11,4 @@ setuptools
 pycaw
 firebase-admin
 pyrebase4
+PyQt5

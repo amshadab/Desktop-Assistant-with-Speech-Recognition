@@ -44,7 +44,7 @@ def sign_up(email, password, first_name, last_name, gender):
         except Exception as e:
             print(f"Error saving user details to Firestore: {e}")
 
-        return 0
+        return user_id
     except Exception as e:
         return str(e)
 
@@ -53,8 +53,9 @@ def sign_up(email, password, first_name, last_name, gender):
 def log_in(email, password):
     try:
         # Log in the user using email and password
-        auth_client.sign_in_with_email_and_password(email, password)
-        return 0
+        user=auth_client.sign_in_with_email_and_password(email, password)
+        user_id = user['localId']
+        return user_id
     except Exception as e:
         return str(e)
 
