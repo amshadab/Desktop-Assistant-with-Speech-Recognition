@@ -12,6 +12,7 @@ import AppOpener
 import gemini_ai
 import time
 import io
+from CustomMessageBox import CustomMessageBox,CustomInputBox
 import sys
 import psutil
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
@@ -66,34 +67,26 @@ def wiki(query):
     speak("Searching Wikipedia")
     try: 
         result=wikipedia.summary(query,sentences=2)
-        print("According to wikipedia")
-        speak("According to wikipedia")
-        print(f"{result} for more information go to wikipedia.com")
-        speak(f"{result} for more information go to wikipedia.com")
+        return f"According to wikipedia {result} for more information go to wikipedia.com"
         
     except Exception as e:
-        print("Something went wrong ",e)
-        speak("Something went wrong")
+        return f"Something went wrong {e}"
     
 
 def google_search(query):
     try:
-        print(f"{query} Searching from google")
-        speak(f"{query} Searching from google")
         kit.search(query)
+        return f"{query} Searching from google"
     except Exception as e:
-        print("Something went wrong ",e)
-        speak("Something went wrong")
+        return f"Something went wrong {e}"
 
 
 def ytvideo(video_name):
     try:
-        print(f"{video_name} is going to play on YouTube")
-        speak(f"{video_name} is going to play on YouTube")
         kit.playonyt(video_name)
+        return f"{video_name} is going to play on YouTube"
     except Exception as e:
-        print("Something went wrong ",e)
-        speak("Something went wrong")
+        return f"Something went wrong {e}"
 
 def temperature(city):
     api_key = "167b7128744c43ab8e9105629241307"  # replace with your actual WeatherAPI key
@@ -108,21 +101,17 @@ def temperature(city):
         temp_celsius = weather_data['current']['temp_c']
         condition = weather_data['current']['condition']['text']
         
-        print(f"The temperature in {city} is {temp_celsius}°C with {condition}.")
-        speak(f"The temperature in {city} is {temp_celsius}°C with {condition}.")
+        return f"The temperature in {city} is {temp_celsius}°C with {condition}."
     else:
-        print(f"Please enter valid city name")
-        speak("please enter valid city name")
+        return "Please Enter valid city name"
 
 
 def send_message(message):
-    speak("Please provide the phone number to which I should send messages.")
-    number=input("Enter phone no. ")
+    number = CustomInputBox.show_input_dialog("Please provide the phone number to which I should send messages")
     while (len(number)<=9):
-        speak(f"The provided phone number have only {len(number)} digits Please tell me again")
-        number=input("Enter phone no. ")
+        number = CustomInputBox.show_input_dialog(f"The provided phone number have only {len(number)} digits Please Enter again")
     
-    speak("This process may take a few seconds and during this process i can't do any other work")
+    # speak("This process may take a few seconds and during this process i can't do any other work")
     now = datetime.datetime.now()
     future_time = now + datetime.timedelta(minutes=2)
     time_hour = future_time.hour
@@ -133,18 +122,15 @@ def send_message(message):
     kit.sendwhatmsg(number, message, time_hour, time_minute)
 
 def incomplete_command(complete_command):
-    print(f"The command you provide is incomplete command, the complete {complete_command}")
-    speak(f"The command you provide is incomplete command, the complete {complete_command}")
+    return f"The command you provide is incomplete command, the complete {complete_command}"
 
 def open_apps(app_name):
     
     try:
-        print(f"Openning {app_name}")
-        speak(f"Openning {app_name}")
         AppOpener.open(app_name,match_closest=True)
+        return f"{app_name} is Opened"
     except Exception as e:
-        print("Something went wrong", e)
-        speak("Something went wrong")
+        return f"Something went wrong {e}"
         
         
         
@@ -155,10 +141,9 @@ def mute():
         IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
         volume = cast(interface, POINTER(IAudioEndpointVolume))
         volume.SetMute(1, None)
-        print("System muted!")
+        return "System muted!"
     except Exception as e:
-        print("Something went wrong",e)
-        speak("Something went wrong")
+        return f"Something went wrong {e}"
 
 
 def unmute():
@@ -169,11 +154,9 @@ def unmute():
         volume = cast(interface, POINTER(IAudioEndpointVolume))
     # Unmute the system
         volume.SetMute(0, None)
-        print("System unmuted!")
-        speak("System unmuted!")
+        return "System unmuted!"
     except Exception as e:
-        print("Something went wrong", e)
-        speak("Something went wrong")
+        return f"Something went wrong {e}"
 
 def process_airesponse(response):
     for command in commands:
@@ -183,19 +166,14 @@ def process_airesponse(response):
     return None,None
 
 def restart():
-    print("Are you sure you want to restart your PC? (yes/no)")
-    speak("Are you sure you want to restart your PC? yes or no")
-    user=takecmd().lower()
-    
+    result=CustomMessageBox.show_message("Are you sure you want to Resatart your pc")
     try:
-        if "yes" in user:
-            speak("Your pc is restarting")
+        if result == 1:
             os.system("shutdown /r /t 0")
         else:
-            speak("Restart canceled")
+            return "Restart canceled"
     except Exception as e:
-        print("Something went wrong",e)
-        speak("Something went wrong")
+        return f"Something Went wrong {e}"
     
 def battery():
     try:
@@ -207,14 +185,11 @@ def battery():
                 status="is"
             else:
                 status="is Not"
-            print(f"Your current battery percentage is {percentage}% and currently charger {status} Plugged In")
-            speak(f"Your current battery percentage is {percentage}% and currently charger {status} Plugged In")
+            return f"Your current battery percentage is {percentage}% and currently charger {status} Plugged In"
         else:
-            print("Battery not found")
-            speak("Battery not found")  
+            return "Battery not found" 
     except Exception as e:
-        print("Something went Wrong",e)
-        speak("Something went Wrong")
+        return f"Something went wrong {e}"
     
 
 def help_function():
@@ -290,50 +265,42 @@ def help_function():
         
         "If you need help with a specific command or have any questions, just ask!"
     )
-    print(help_text)
+    return help_text
     
           
   
 
 def sleep():
-    print("Are you sure you want to Sleep your PC? (yes/no)")
-    speak("Are you sure you want to Sleep your PC? yes or no")
-    user=takecmd().lower()
+    result=CustomMessageBox.show_message("Are you sure you want to Sleep your pc")
     
     try:
-        if "yes" in user:
-            speak("Your pc is go to sleep mode")
+        if result==1:
             os.system("rundll32.exe powrprof.dll,SetSuspendState 0,1,0")
         else:
-            print("Sleep canceled")
-            speak("Sleep canceled")
+            return "Sleep canceled"
     except Exception as e:
-        print("Something went wrong",e)
-        speak("Something went wrong")
+        return f"Something Went wrong {e}"
         
         
 def ip_address():
     
     try:
         ip=requests.get("https://api.ipify.org").text
-        print(ip)
-        speak(f"Your IP Address is {ip}")
+        return f"Your IP Address is {ip}"
     except Exception as e:
-        print("Something went wrong",e)
-        speak("Something went wrong")
+        return f"Something went wrong {e}"
 
 def minimize():
     
     try:
         window = gw.getActiveWindow()
-        speak("current window is minimizing")
         if window:
             window.minimize()
+            return "current window is minimized"
         else:
-            print("Current window can't recognize")
+            return "Current window can't recognize"
     except Exception as e:
-        print("Something went wrong",e)
-        speak("Something went wrong")
+        return f"Something went wrong {e}"
         
         
 def maximize():
@@ -341,58 +308,43 @@ def maximize():
     try:
         window = gw.getActiveWindow()
         if window:
-            print("Current Window is Maximizing")
-            speak("Current Window is Maximizing")
             window.maximize()
+            return "Current Window is Maximized"
         else:
-            print("Current window can't recognize")
-            speak("Current window can't recognoze")
+            return "Current window can't recognize"
     except Exception as e:
-        print("Something went wrong",e)
-        speak("Something went wrong")
+        return f"Something went wrong {e}"
         
-        
-        
+              
 def closewindow():
     
     try:
         window = gw.getActiveWindow()
         if window:
-            print("Current Window is Closing")
-            speak("Current Window is Closing")
             window.close()
+            return "Current Window is Closed"
         else:
-            print("Current can't recognize")
-            speak("Current can't recognize")
+            return "Current can't recognize"
     except Exception as e:
-        print("Something went wrong",e)
-        speak("Something went wrong")
+        return f"Something went wrong {e}"
         
-def sleep():
-    print("Are you sure you want to Sleep your PC? (yes/no)")
-    speak("Are you sure you want to Sleep your PC? yes or no")
-    user=takecmd().lower()
+def shutdown():
+    result =  CustomMessageBox.show_message("Are you sure you want to shutdown your pc")
     
     try:
-        if "yes" in user:
-            print("Your pc is go to sleep mode")
-            speak("Your pc is go to sleep mode")
-            os.system("rundll32.exe powrprof.dll,SetSuspendState 0,1,0")
+        if result==1:
+            os.system("shutdown /s /t 0")
         else:
-            print("Sleep canceled")
-            speak("Sleep canceled")
+            return "Shutdown Cancelled"
     except Exception as e:
-        print("Sleep canceled ",e)
-        speak("Sleep canceled")
+        return f"Something Went wrong {e}"
 
 def open_website(web_name):
     try:
         webbrowser.open(f"http://{web_name}")
-        print(f"Opening {web_name} in your browser...")
-        speak(f"Opening {web_name} in your browser...")
+        return f"Opening {web_name} in your browser..."
     except Exception as e:
-        print(f"Failed to open {web_name}. Error: {e}")
-        speak(f"Failed to open {web_name}")
+        return f"Failed to open {web_name}"
         
         
 def close_apps(app_name):
@@ -405,19 +357,17 @@ def close_apps(app_name):
         result = captured_output.getvalue().strip()
         
         if "not running" in result:
-            print("Sorry I can't close the app due to security concern and permission issues, If the app you want to close is your current app then try again and say close the current window")
-            speak("Sorry I can't close the app due to security concern and permission issues, If the app you want to close is your current window, then try again and say close the current window",speed=150)
+            return "Sorry I can't close the app due to security concern and permission issues, If the app you want to close is your current window, then try again and say close the current window"
     except Exception as e:
-        print("Something went wrong ",e)
-        speak("Something went wrong")
+        return f"Something went wrong {e}"
 
 def ai_mode(query):
-    gemini_ai.aispeechmode(query)
+    result=gemini_ai.aispeechmode(query)
+    return result
 
 def current_time():
     time = datetime.datetime.now().strftime("%I:%M %p") 
-    print(time)
-    speak(f"The current time is {time}")
+    return f"The current time is {time}"
 
 def exit_fucntion():
     now = int(datetime.datetime.now().hour)
@@ -439,19 +389,16 @@ def exit_fucntion():
         speak("Goodbye! Have a restful night!")
         exit()
     
-def query_fucn(answer):
-    print(answer)
-    speak(answer)
+# def query_fucn(answer):
+#     return answer
     
     
 def current_date():
     date=date=datetime.datetime.now().strftime("%B %d, %Y")
-    print(f"Today's date is {date}")
-    speak(f"Today's date is {date}")
+    return f"Today's date is {date}"
 
 def default_fucntion(query):
-    print(query)
-    speak(query)
+    return query
 
 command_actions={
     "open":open_apps,
@@ -465,7 +412,7 @@ command_actions={
     "ip address of my device":ip_address,
     "play video on youtube":ytvideo,
     "restart":restart,
-    "sleep":sleep,
+    "shutdown":shutdown,
     "mute":mute,
     "unmute":unmute,
     "current date":current_date,
@@ -480,11 +427,27 @@ command_actions={
     "exit":exit_fucntion
 }
 
+def input_from_gui(user_input):
+    query=ap.processcmd(user_input)
+    command,param=process_airesponse(query)
+    
+    if command==None and param==None:
+        result=default_fucntion(query)
+        return result
+    try:
+        if command:
+            action = command_actions.get(command)
+            if param:
+                result=action(param)
+                return result# If there is a parameter, pass it to the function
+            else:
+                result=action()
+                return result
+    except Exception as e:
+                return str(e)
 
 def microphone():
-    isKeyboard=False
     
-    if isKeyboard==False:
         wish()
         speak("How can I help you, Sir?")
         
@@ -510,13 +473,9 @@ def microphone():
                 print(e)
             time.sleep(5)
             speak("Sir, Do you have any other work")
-    else:
-        keyboard()
+    
 
 def keyboard():
-    isMicrophone=False
-    
-    if isMicrophone==False:
         wish()
         speak("How can I help you, Sir?")
         
@@ -541,12 +500,12 @@ def keyboard():
                 print(e)
             time.sleep(5)
             speak("Sir, Do you have any other work")
-    else:
-        microphone()
+    
         
 if __name__ == "__main__":
-    microphone()
+    # microphone()
     # keyboard()
+    input_from_gui("open codewithharry website")
     
     
     

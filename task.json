@@ -52,8 +52,8 @@
       "command": "send message <message>",
       "description": "Sends a message via WhatsApp after receiving the phone number and message.",
       "examples": [
-        {"user_input": "send massage to John hw are you", "assistant_output": "send message to John: Hello, how are you?"},
-        {"user_input": "whatsapp msg Jane hey there", "assistant_output": "send message to Jane: Hey there!"}
+        {"user_input": "send massage to John hw are you", "assistant_output": "send message Hello, how are you?"},
+        {"user_input": "whatsapp msg Jane hey there", "assistant_output": "send message Hey there!"}
       ]
     },
     {
