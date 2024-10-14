@@ -503,9 +503,9 @@ def keyboard():
     
         
 if __name__ == "__main__":
-    # microphone()
+    microphone()
     # keyboard()
-    input_from_gui("open codewithharry website")
+    # input_from_gui("sleep my pc")
     
     
     
