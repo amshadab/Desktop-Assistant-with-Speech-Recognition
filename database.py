@@ -7,7 +7,7 @@ from config import KEY
 import traceback
 
 # Initialize Firebase Admin SDK with your service account
-cred = credentials.Certificate("desktop-assistant-a066c-firebase-adminsdk-t7095-56c262cf5a.json")
+cred = credentials.Certificate("desktop-assistant-c7034-firebase-adminsdk-oz26k-6bfdf9cd28.json")
 firebase_admin.initialize_app(cred)
 
 # Initialize Firestore
@@ -15,9 +15,9 @@ db = firestore.client()
 
 # Firebase client configuration
 firebase_config = {
-    "apiKey": "AIzaSyCYprTDXIKbYnlDjgkE3rHIu_PyeIVszSY",
-    "authDomain": "desktop-assistant-a066c.firebaseapp.com",
-    "projectId": "desktop-assistant-a066c",
+    "apiKey": "AIzaSyBkzF1tp-VM9VX1A0f6LN_yx7Q29_XWJcs",
+    "authDomain": "desktop-assistant-c7034.firebaseapp.com",
+    "projectId": "desktop-assistant-c7034",
     "databaseURL": "https://dummy-url.firebaseio.com",  # Placeholder URL
     "storageBucket": "desktop-assistant-a066c.appspot.com",
     "messagingSenderId": "YOUR_MESSAGING_SENDER_ID",
@@ -160,6 +160,7 @@ def decrypt_data(encrypted_data):
 # sign_up("neser@example.com", "strongpassword123", "John", "Doe", "Male")
 
 # Log in the user
-# log_in("shady@gmail.com", "Shadab@1234")
-save_conversation("this","i m kknoo")
+# result=log_in("shady@gmail.com", "Shadab@1234")
+# print(result)
+# save_conversation("this","i m kknoo")
 get_conversations()
