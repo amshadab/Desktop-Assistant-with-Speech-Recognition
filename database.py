@@ -3,11 +3,11 @@ from firebase_admin import credentials, auth, firestore
 import pyrebase
 from datetime import datetime
 from cryptography.fernet import Fernet
-from config import KEY
+from config import KEY,FKEY,AUTHDOMAIN,STORAGEBUCKET,PROJECTID
 import traceback
 
 # Initialize Firebase Admin SDK with your service account
-cred = credentials.Certificate("desktop-assistant-c7034-firebase-adminsdk-oz26k-6bfdf9cd28.json")
+cred = credentials.Certificate("desktop-assistant-f315e-firebase-adminsdk-ilw8c-fb4eac3517.json")
 firebase_admin.initialize_app(cred)
 
 # Initialize Firestore
@@ -15,11 +15,11 @@ db = firestore.client()
 
 # Firebase client configuration
 firebase_config = {
-    "apiKey": "AIzaSyBkzF1tp-VM9VX1A0f6LN_yx7Q29_XWJcs",
-    "authDomain": "desktop-assistant-c7034.firebaseapp.com",
-    "projectId": "desktop-assistant-c7034",
+    "apiKey": FKEY,
+    "authDomain": AUTHDOMAIN,
+    "projectId": PROJECTID,
     "databaseURL": "https://dummy-url.firebaseio.com",  # Placeholder URL
-    "storageBucket": "desktop-assistant-a066c.appspot.com",
+    "storageBucket": STORAGEBUCKET,
     "messagingSenderId": "YOUR_MESSAGING_SENDER_ID",
     "appId": "YOUR_APP_ID"
 }
@@ -157,10 +157,10 @@ def get_conversations():
 
 # Example Usage:
 # Sign up a new user
-# sign_up("nddddr@example.com", "strongpassword123", "John", "Doe", "Male")
+# sign_up("shadfghhlghav@example.com", "strongpassword123", "John", "Doe", "Male")
 
 # Log in the user
-result = log_in("nddddr@example.com", "strongpassword123")
+result = log_in("shadfghhlghav@example.com", "strongpassword123")
 # print(result)
 
 # Save a conversation
