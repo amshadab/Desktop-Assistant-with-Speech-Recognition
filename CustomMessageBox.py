@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import QApplication, QDialog, QLabel, QVBoxLayout, QHBoxLayout, QPushButton,QLineEdit
-from PyQt5 import QtCore
+from PyQt5 import QtCore,QtWidgets
 import sys
 
 class CustomMessageBox(QDialog):
-    def __init__(self, parent=None, text="", x=200, y=200, B1="OK", B2="Cancel"):
+    def __init__(self, parent=None, text="", x=400, y=400, B1="OK", B2="Cancel"):
         super().__init__(parent)
         self.setWindowTitle("Custom Message Box")
         
@@ -13,6 +13,7 @@ class CustomMessageBox(QDialog):
 
         # Label
         self.label = QLabel(text)
+        self.label.setWordWrap(True)
         self.label.setAlignment(QtCore.Qt.AlignCenter)  # Align text to center
         
         # Set the dialog's style
@@ -31,8 +32,7 @@ class CustomMessageBox(QDialog):
         self.layout.addWidget(self.label)
         
         # Buttons
-        self.b1 = QPushButton(B1)
-        self.b2 = QPushButton(B2)
+        
         
         # Set button styles
         button_style = """
@@ -51,16 +51,16 @@ class CustomMessageBox(QDialog):
                 color: white;
             }
         """
-        self.b1.setStyleSheet(button_style)
-        self.b2.setStyleSheet(button_style)
-        
-        # Add buttons to the button layout
-        self.button_layout.addWidget(self.b1)
-        self.button_layout.addWidget(self.b2)
-        
-        # Connect button actions to close the dialog and set the result
-        self.b1.clicked.connect(self.ok_clicked)
-        self.b2.clicked.connect(self.cancel_clicked)
+        if not B1=='none':
+            self.b1 = QPushButton(B1)
+            self.b1.setStyleSheet(button_style)
+            self.button_layout.addWidget(self.b1)
+            self.b1.clicked.connect(self.accept)
+        if not B2=='none':
+            self.b2 = QPushButton(B2)
+            self.b2.setStyleSheet(button_style)
+            self.button_layout.addWidget(self.b2)
+            self.b2.clicked.connect(self.reject)
         
         # Add the button layout to the main layout
         self.layout.addLayout(self.button_layout)
@@ -68,22 +68,21 @@ class CustomMessageBox(QDialog):
         # Set the final layout
         self.setLayout(self.layout)
 
-    def ok_clicked(self):
-        self.done(1)  # Set dialog result to 1 for OK
-        self.close()
+    # def ok_clicked(self):
+    #     self.done(1)  # Set dialog result to 1 for OK
+    #     self.close()
 
-    def cancel_clicked(self):
-        self.done(0)  # Set dialog result to 0 for Cancel
-        self.close()
+    # def cancel_clicked(self):
+    #     self.done(0)  # Set dialog result to 0 for Cancel
+    #     self.close()
 
     @staticmethod
-    def show_message(message):
-        app = QApplication(sys.argv)  # Initialize the app only once
-        dialog = CustomMessageBox(None, message, 600, 600, "OK", "Cancel")
-        dialog.setWindowModality(QtCore.Qt.ApplicationModal)  # Set dialog as modal
+    def show_message(parent=None,text="", x=400, y=400, B1="OK", B2="Cancel"):
+        dialog = CustomMessageBox(parent,text, x, y, B1, B2)
         result = dialog.exec_()  # Start the dialog event loop and get the result
         return result  # Return the result of the dialog
     
+
 class CustomInputBox(QDialog):
     def __init__(self, parent=None, text="", x=200, y=200, B1="OK", B2="Cancel"):
         super().__init__(parent)
@@ -154,18 +153,20 @@ class CustomInputBox(QDialog):
         
         # Set the final layout
         self.setLayout(self.layout)
-
     def ok_clicked(self):
-        self.done(1)  # Set dialog result to 1 for OK
-        self.close()
+            self.done(1)  # Set dialog result to 1 for OK
+            self.close()
 
     def cancel_clicked(self):
-        self.done(0)  # Set dialog result to 0 for Cancel
-        self.close()
+            self.done(0)  # Set dialog result to 0 for Cancel
+            self.close()    
+
+
+
+    
 
     @staticmethod
     def show_input_dialog(message):
-        app = QApplication(sys.argv)  # Initialize the app only once
         dialog = CustomInputBox(None, message, 600, 300, "OK", "Cancel")
         dialog.setWindowModality(QtCore.Qt.ApplicationModal)  # Set dialog as modal
         result = dialog.exec_()  # Start the dialog event loop and get the result
@@ -175,15 +176,11 @@ class CustomInputBox(QDialog):
         return None  # If Cancel is clicked or dialog is closed
 
 
+
 # Backend call example
 if __name__ == "__main__":
-    # result = CustomMessageBox.show_message("Welcome to NOVA\n\nNOVA is an AI assistant which can control your desktop based on your command.")
-    # if result == 1:
-    #     print("User clicked OK")
-    # else:
-    #     print("User clicked Cancel")
-    user_input = CustomInputBox.show_input_dialog("Please enter your command:")
-    if user_input is not None:
-        print("User input:", user_input)
+    result = CustomMessageBox.show_message("Welcome to NOVA\n\nNOVA is an AI assistant which can control your desktop based on your command.")
+    if result == 1:
+        print("User clicked OK")
     else:
         print("User clicked Cancel")

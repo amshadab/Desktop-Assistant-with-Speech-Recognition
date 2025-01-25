@@ -1,8 +1,10 @@
+import subprocess
+import webbrowser
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
-import sys
+import sys,time
 import database as db
-
+from  CustomMessageBox import CustomMessageBox
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -264,19 +266,50 @@ class Ui_MainWindow(object):
         
         result=db.sign_up(email,confirm_password,first_name,last_name,gender)
         
-        if len(result) == 28:
-            QMessageBox.information(self.centralwidget, "Success", "Signup successful!")
+        if result==0:
+
+            r= ( CustomMessageBox.show_message(text="""Welcome to NOVA 
+
+NOVA is your intelligent desktop assistant, designed to seamlessly control your system based on your voice and text commands. Get ready to elevate your productivity and simplify your workflow with cutting-edge AI at your fingertips.
+
+Let NOVA handle the details, so you can focus on what matters!
+""",B1="learn More",B2="Launch Nova"))
+            if r :
+                print("User clicked learn more")
+                webbrowser.open("https://github.com/Siddiq2772/NOVA--aixpalin-.git")
+                QtWidgets.QApplication.quit()                 
+                subprocess.Popen(["python", "maingui.py"]) 
+            else:
+                # os.system("python maingui.py")
+                print("User clicked lauch nova")
+                QtWidgets.QApplication.quit()                 
+                subprocess.Popen(["python", "maingui.py"])  
+
         else:
-            QMessageBox.information(self.centralwidget, "Something Wrong", f"{result}")
+            CustomMessageBox.show_message(text=result,B1='Try Again',B2='none')
+            # QMessageBox.information(self.centralwidget, "Something Wrong", f"{result}")
+            # print(result)
 
     def login(self):
+        global launch_main
         login_email,password=self.onLoginChanged()
         result=db.log_in(login_email,password)
         
-        if len(result) == 28:
-            QMessageBox.information(self.centralwidget, "Success", "Log in successful!")
+        
+        if result==0:            
+            r= ( CustomMessageBox.show_message(text="""✅ Login Successful! 
+
+Hello, [Username]! You're now connected to NOVA. Let's get things done effortlessly.
+
+""",B1="LAUNCH NOVA",B2='none'))
+            if r :
+                print("User clicked OK")
+                QtWidgets.QApplication.quit()                 
+                subprocess.Popen(["python", "maingui.py"])         
+           
         else:
-            QMessageBox.information(self.centralwidget, "Something Wrong", f"{result}")
+            CustomMessageBox.show_message(text=result,B1='Try Again',B2='none')
+            # QMessageBox.information(self.centralwidget, "Something Wrong", f"{result}")
 
     def gotoSignupPage(self, event):
         self.stackedWidget.setCurrentWidget(self.page_signup)

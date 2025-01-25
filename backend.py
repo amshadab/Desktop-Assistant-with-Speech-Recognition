@@ -1,3 +1,4 @@
+import threading
 import pyttsx3
 import speech_recognition as sr
 import datetime
@@ -18,8 +19,9 @@ import psutil
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 from comtypes import CLSCTX_ALL
 from ctypes import cast, POINTER
-
-
+mic_off=False
+obj=None
+msg = None
 engine = pyttsx3.init("sapi5")
 commands = ["open", "shutdown", "ip address of my device", "minimise window","close window","maximise window","go to","search on google","search on wikipedia",
             "current temperature","send message","ai mode","sleep","current date","restart","play video on youtube","help","close","send message","battery","current time","Incomplete","mute","unmute","exit"]
@@ -29,30 +31,59 @@ def set_speech_rate(rate):
 
 def speak(text,speed=200):
     set_speech_rate(speed)
-    engine.say(text)
-    engine.runAndWait()
+    if engine._inLoop:
+        engine.endLoop()
+    else:
+        engine.stop()
+    for line in text.split('\n'):
+        engine.say(line)
+        engine.runAndWait()
+    # engine.say(text)
+    # engine.runAndWait()
+
 
 # Voice to text
 def takecmd():
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print("Listening...")
+        if mic_off: return 
         r.pause_threshold = 0.8
+        if mic_off: return 
         try:
             audio = r.listen(source, timeout=5, phrase_time_limit=5)  # Increased timeout
-            print("Recognizing...")
-            query = r.recognize_google(audio)
-            print(query)
+            if mic_off: return 
         except sr.WaitTimeoutError:
             speak("Listening timed out. Please try again.")
-            return "none"
+            return 
         except sr.UnknownValueError:
             speak("Sorry, I did not understand that.")
-            return "none"
+            return 
         except sr.RequestError:
             speak("Sorry, there was an issue with the request.")
+            return 
+        return audio
+    
+def recoginze(audio):
+    print("Recognizing...")
+    try :
+        if mic_off: return "none"
+        if audio is None:
             return "none"
-        return query.lower()
+        r = sr.Recognizer()
+        query = r.recognize_google(audio)
+        if mic_off: return "none"
+        print(query)
+    except sr.WaitTimeoutError:
+            speak("Listening timed out. Please try again.")
+            return "none"
+    except sr.UnknownValueError:
+            speak("Sorry, I did not understand that.")
+            return "none"
+    except sr.RequestError:
+            speak("Sorry, there was an issue with the request.")
+            return "none"
+    return query.lower()
 
 def wish():
     now = int(datetime.datetime.now().hour)
@@ -63,15 +94,17 @@ def wish():
     else:
         speak("Good Evening")
 
+
 def wiki(query):
-    speak("Searching Wikipedia")
+    
     try: 
         result=wikipedia.summary(query,sentences=2)
+        print(f"According to wikipedia {result} for more information go to wikipedia.com")
         return f"According to wikipedia {result} for more information go to wikipedia.com"
         
     except Exception as e:
         return f"Something went wrong {e}"
-    
+       
 
 def google_search(query):
     try:
@@ -89,7 +122,7 @@ def ytvideo(video_name):
         return f"Something went wrong {e}"
 
 def temperature(city):
-    api_key = "167b7128744c43ab8e9105629241307"  # replace with your actual WeatherAPI key
+    api_key = "32b87d5cde3a4809b7344238251601"  # replace with your actual WeatherAPI key
     base_url = "http://api.weatherapi.com/v1/current.json"
     
     complete_url = f"{base_url}?key={api_key}&q={city}"
@@ -107,25 +140,14 @@ def temperature(city):
 
 
 def send_message(message):
-    number = CustomInputBox.show_input_dialog("Please provide the phone number to which I should send messages")
-    while (len(number)<=9):
-        number = CustomInputBox.show_input_dialog(f"The provided phone number have only {len(number)} digits Please Enter again")
-    
-    # speak("This process may take a few seconds and during this process i can't do any other work")
-    now = datetime.datetime.now()
-    future_time = now + datetime.timedelta(minutes=2)
-    time_hour = future_time.hour
-    time_minute = future_time.minute
-
-    country_code="+91"
-    number=f"{country_code}{number}"
-    kit.sendwhatmsg(number, message, time_hour, time_minute)
+    msg = message
+    return f"sending  message {message}"
 
 def incomplete_command(complete_command):
     return f"The command you provide is incomplete command, the complete {complete_command}"
 
 def open_apps(app_name):
-    
+    # pass
     try:
         AppOpener.open(app_name,match_closest=True)
         return f"{app_name} is Opened"
@@ -165,15 +187,7 @@ def process_airesponse(response):
             return command,param
     return None,None
 
-def restart():
-    result=CustomMessageBox.show_message("Are you sure you want to Resatart your pc")
-    try:
-        if result == 1:
-            os.system("shutdown /r /t 0")
-        else:
-            return "Restart canceled"
-    except Exception as e:
-        return f"Something Went wrong {e}"
+
     
 def battery():
     try:
@@ -268,18 +282,17 @@ def help_function():
     return help_text
     
           
-  
-
 def sleep():
-    result=CustomMessageBox.show_message("Are you sure you want to Sleep your pc")
-    
-    try:
-        if result==1:
-            os.system("rundll32.exe powrprof.dll,SetSuspendState 0,1,0")
-        else:
-            return "Sleep canceled"
-    except Exception as e:
-        return f"Something Went wrong {e}"
+    return "sleep_"
+def shutdown():
+    return "shutdown_"
+
+def restart():
+    return "restart_"
+
+
+
+
         
         
 def ip_address():
@@ -328,16 +341,7 @@ def closewindow():
     except Exception as e:
         return f"Something went wrong {e}"
         
-def shutdown():
-    result =  CustomMessageBox.show_message("Are you sure you want to shutdown your pc")
-    
-    try:
-        if result==1:
-            os.system("shutdown /s /t 0")
-        else:
-            return "Shutdown Cancelled"
-    except Exception as e:
-        return f"Something Went wrong {e}"
+
 
 def open_website(web_name):
     try:
@@ -351,13 +355,12 @@ def close_apps(app_name):
     try:
         captured_output = io.StringIO()
         sys.stdout = captured_output
-        speak(f"Closing {app_name}")
-        AppOpener.close(app_name)
+        # AppOpener.close(app_name)
         sys.stdout = sys.__stdout__
-        result = captured_output.getvalue().strip()
-        
+        result = captured_output.getvalue().strip()        
         if "not running" in result:
-            return "Sorry I can't close the app due to security concern and permission issues, If the app you want to close is your current window, then try again and say close the current window"
+         return "Sorry I can't close the app due to security concern and permission issues, If the app you want to close is your current window, then try again and say close the current window"
+        return f"Closing {app_name}"   
     except Exception as e:
         return f"Something went wrong {e}"
 
@@ -374,20 +377,16 @@ def exit_fucntion():
     
     if 5 <= now < 12:
         print ("Goodbye! Have a great day ahead!")
-        speak("Goodbye! Have a great day ahead!")
-        exit()
+        return "Goodbye! Have a great day ahead!"
     elif 12 <= now< 17:
         print("Goodbye! Have a wonderful afternoon!")
-        speak("Goodbye! Have a wonderful afternoon!")
-        exit()
+        return "Goodbye! Have a wonderful afternoon!"
     elif 17 <= now < 21:
         print("Goodbye! Have a pleasant evening!")
-        speak("Goodbye! Have a pleasant evening!")
-        exit()
+        return  "Goodbye! Have a pleasant evening!"
     else:
         print("Goodbye! Have a restful night!")
-        speak("Goodbye! Have a restful night!")
-        exit()
+        return "Goodbye! Have a restful night!"
     
 # def query_fucn(answer):
 #     return answer
@@ -427,7 +426,9 @@ command_actions={
     "exit":exit_fucntion
 }
 
-def input_from_gui(user_input):
+def input_from_gui(user_input,self):
+    global obj
+    obj=self
     query=ap.processcmd(user_input)
     command,param=process_airesponse(query)
     
@@ -503,9 +504,9 @@ def keyboard():
     
         
 if __name__ == "__main__":
-    microphone()
+    # microphone()
     # keyboard()
-    # input_from_gui("sleep my pc")
+    input_from_gui("shutdown")
     
     
     
