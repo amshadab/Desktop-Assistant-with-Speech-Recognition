@@ -350,7 +350,8 @@ def open_website(web_name):
 
 def user_name():
     f_name,l_name=get_username()
-    return f"{f_name} {l_name}"
+    return f"Your name is {f_name} {l_name}. How may I assist you further?"
+
  
 def close_apps(app_name):
     try:

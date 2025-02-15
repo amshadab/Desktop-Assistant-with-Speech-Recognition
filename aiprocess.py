@@ -90,6 +90,7 @@ def processcmd(command):
     f"- For apps, return 'open <app_name>' or 'close <app_name>' if the app exists in {app_keys}, or inform the user that the app is not available if it's not in {app_keys}.\n"
     f"- If the command is incomplete, return 'Incomplete command: <correct_command>'.\n"
     f"- If the user asks a question related to any domain or field, interpret the question and return 'AI mode: <answer>'."
+    f"- If the user asks about themselves, return 'user'"
 )
 
 
