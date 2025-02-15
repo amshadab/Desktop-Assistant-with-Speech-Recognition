@@ -1,12 +1,11 @@
-
 # -*- mode: python ; coding: utf-8 -*-
 
 
 a = Analysis(
-    ['maingui.py'],
+    ['signup_login.py'],
     pathex=[],
     binaries=[],
-    datas=[('task.json', '.'), ('desktop-assistant-f315e-firebase-adminsdk-ilw8c-fb4eac3517.json', '.')],
+    datas=[],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -23,7 +22,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='maingui',
+    name='signup_login',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

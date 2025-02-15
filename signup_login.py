@@ -1,12 +1,15 @@
-import subprocess
 import webbrowser
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox
-import sys,time
+from PyQt5 import QtCore,  QtWidgets
+import sys,os
 import database as db
 from  CustomMessageBox import CustomMessageBox
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+        if os.path.exists("user_config.txt"):
+            self.open_main()       
+            
+
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(900, 650)
         MainWindow.setMinimumSize(QtCore.QSize(900, 650))
@@ -276,14 +279,14 @@ Let NOVA handle the details, so you can focus on what matters!
 """,B1="learn More",B2="Launch Nova"))
             if r :
                 print("User clicked learn more")
-                webbrowser.open("https://github.com/Siddiq2772/NOVA--aixpalin-.git")
-                QtWidgets.QApplication.quit()                 
-                subprocess.Popen(["python", "maingui.py"]) 
+                webbrowser.open("https://github.com/Siddiq2772/nova_assistant")
+                self.open_main()       
+  
             else:
                 # os.system("python maingui.py")
                 print("User clicked lauch nova")
-                QtWidgets.QApplication.quit()                 
-                subprocess.Popen(["python", "maingui.py"])  
+                self.open_main()  
+ 
 
         else:
             CustomMessageBox.show_message(text=result,B1='Try Again',B2='none')
@@ -296,16 +299,16 @@ Let NOVA handle the details, so you can focus on what matters!
         result=db.log_in(login_email,password)
         
         
-        if result==0:            
+        if result==0:
+
             r= ( CustomMessageBox.show_message(text="""✅ Login Successful! 
 
-Hello, [Username]! You're now connected to NOVA. Let's get things done effortlessly.
+Hello,  You're now connected to NOVA. Let's get things done effortlessly.
 
 """,B1="LAUNCH NOVA",B2='none'))
             if r :
                 print("User clicked OK")
-                QtWidgets.QApplication.quit()                 
-                subprocess.Popen(["python", "maingui.py"])         
+                self.open_main()        
            
         else:
             CustomMessageBox.show_message(text=result,B1='Try Again',B2='none')
@@ -337,6 +340,13 @@ Hello, [Username]! You're now connected to NOVA. Let's get things done effortles
         self.lineEdit_login_password.setPlaceholderText(_translate("MainWindow", "Password"))
         self.pushButton_login_page.setText(_translate("MainWindow", "LOGIN"))
         self.label_goto_signup.setText(_translate("MainWindow", "Don't have an account?"))
+
+    def open_main(self):
+        QtWidgets.QApplication.quit()                 
+        if(os.path.exists("maingui.exe")):
+                        os.system("maingui.exe")
+        else:            
+                        os.system("python maingui.py") 
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

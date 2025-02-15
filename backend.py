@@ -1,8 +1,6 @@
-import threading
 import pyttsx3
 import speech_recognition as sr
 import datetime
-import os
 import requests
 import wikipedia
 import webbrowser
@@ -13,7 +11,7 @@ import AppOpener
 import gemini_ai
 import time
 import io
-from CustomMessageBox import CustomMessageBox,CustomInputBox
+from database import get_username
 import sys
 import psutil
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
@@ -24,20 +22,20 @@ obj=None
 msg = None
 engine = pyttsx3.init("sapi5")
 commands = ["open", "shutdown", "ip address of my device", "minimise window","close window","maximise window","go to","search on google","search on wikipedia",
-            "current temperature","send message","ai mode","sleep","current date","restart","play video on youtube","help","close","send message","battery","current time","Incomplete","mute","unmute","exit"]
+            "current temperature","send message","ai mode","sleep","current date","restart","play video on youtube","help","close","send message","battery","current time","Incomplete","mute","unmute","exit","user"]
 # Text to speak function
 def set_speech_rate(rate):
     engine.setProperty('rate', rate)
 
 def speak(text,speed=200):
     set_speech_rate(speed)
+    
     if engine._inLoop:
         engine.endLoop()
     else:
         engine.stop()
-    for line in text.split('\n'):
-        engine.say(line)
-        engine.runAndWait()
+    engine.say(text)
+    engine.runAndWait()
     # engine.say(text)
     # engine.runAndWait()
 
@@ -48,7 +46,7 @@ def takecmd():
     with sr.Microphone() as source:
         print("Listening...")
         if mic_off: return 
-        r.pause_threshold = 0.8
+        r.pause_threshold = 1
         if mic_off: return 
         try:
             audio = r.listen(source, timeout=5, phrase_time_limit=5)  # Increased timeout
@@ -349,8 +347,11 @@ def open_website(web_name):
         return f"Opening {web_name} in your browser..."
     except Exception as e:
         return f"Failed to open {web_name}"
-        
-        
+
+def user_name():
+    f_name,l_name=get_username()
+    return f"{f_name} {l_name}"
+ 
 def close_apps(app_name):
     try:
         captured_output = io.StringIO()
@@ -422,6 +423,7 @@ command_actions={
     "battery":battery,
     "help":help_function,
     "close":close_apps,
+    "user":user_name,
     "Incomplete":incomplete_command,
     "exit":exit_fucntion
 }
@@ -474,7 +476,6 @@ def microphone():
                 print(e)
             time.sleep(5)
             speak("Sir, Do you have any other work")
-    
 
 def keyboard():
         wish()

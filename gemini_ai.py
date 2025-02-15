@@ -18,12 +18,13 @@ def aispeechmode(query):
     try:
         # Send message to the API
         response = chat.send_message(query)
-        return f"Chatbot: {response.text}"
-        
+        print('Chatbot:', response.text)
             
     except StopCandidateException as e:
-        return "Chatbot: That question seems to be causing an issue. Please try rephrasing."
+        print("Chatbot: That question seems to be causing an issue. Please try rephrasing.")
+        print(f"Error Details: {e}")
     except Exception as e:
-        return f"Chatbot: Sorry, something went wrong. {e}"
+        print("Chatbot: Sorry, something went wrong.")
+        print(f"Error: {e}")
 
    
