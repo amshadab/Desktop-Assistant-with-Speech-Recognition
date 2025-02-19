@@ -1,4 +1,3 @@
-
 import firebase_admin
 from firebase_admin import credentials,  firestore
 import pyrebase
@@ -223,3 +222,64 @@ def get_user_initials():
         print(f"Error retrieving user initials: {e}")
         traceback.print_exc()
         return None
+    
+def get_all_conversations():
+    try:
+        with open("user_config.txt", "r") as fr:
+            user_id = fr.read().strip()
+
+        # Fetch all conversations ordered by timestamp
+        conversations = db.collection('users').document(user_id).collection('conversations').order_by('timestamp').get()
+        
+        if not conversations:
+            print("No conversations found for this user.")
+            return None  # If no conversations, return None
+        
+        all_conversations = []  # List to store the processed conversations
+        
+        for conv in conversations:
+            # Get the encrypted data as a string
+            encrypted_user_input = conv.to_dict().get('user_input')
+            encrypted_assistant_response = conv.to_dict().get('assistant_response')
+
+            try:
+                # Decrypt the data
+                user_input = decrypt_data(encrypted_user_input.encode('utf-8')) if isinstance(encrypted_user_input, str) else decrypt_data(encrypted_user_input)
+                assistant_response = decrypt_data(encrypted_assistant_response.encode('utf-8')) if isinstance(encrypted_assistant_response, str) else decrypt_data(encrypted_assistant_response)
+
+                # Append the decrypted conversation to the list
+                all_conversations.append({
+                    "user_input": user_input,
+                    "assistant_response": assistant_response,
+                    "timestamp": conv.to_dict().get('timestamp')
+                })
+            
+            except Exception as decryption_error:
+                print(f"Decryption error for conversation ID {conv.id}: {decryption_error}")
+
+        return all_conversations  # Return the list of all processed conversations
+
+    except Exception as e:
+        print(f"Error retrieving conversations: {e}")
+        traceback.print_exc()
+        return None
+
+
+def get_last_five_conversations():
+    all_conversations = get_all_conversations()  # Get all conversations from the function above
+    
+    if all_conversations is None:
+        return None
+    
+    # Slice the last 2 conversations from the list
+    last_five_conversations = all_conversations[-5:]  # Fetch the last five conversations
+
+    # Reverse the order of the conversations (latest comes last)
+    last_five_conversations_reversed = last_five_conversations[::-1]
+
+    return last_five_conversations_reversed
+
+
+
+if __name__ == "__main__":
+    print(get_last_five_conversations())

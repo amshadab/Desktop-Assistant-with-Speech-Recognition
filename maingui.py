@@ -1,5 +1,5 @@
 import sys,os
-import time,threading
+import time,re
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout,QStackedWidget, QLabel, QPushButton, QTextEdit,  QScrollArea, QFrame
 from PyQt5.QtCore import Qt, QSize, QThread, pyqtSignal,QPropertyAnimation
 from PyQt5.QtGui import QIcon,QMovie,QPixmap
@@ -598,7 +598,7 @@ class ChatThread(QThread):
             self.state.emit("Thinking...")
             
             self.message_received.emit("You:"+query)
-            result = input_from_gui(query,self).replace("*","")
+            result = input_from_gui(query,self).replace("*"," ")
             if result =="restart_": 
                 self.restart.emit()
                 result = "restarting your computer"
@@ -626,11 +626,18 @@ class ChatThread(QThread):
                 
             self.state.emit("Speaking...")
             
-            for r in result.split("," or "." or ":" or "!" or "?" or ";" or "/n"):
-                if not b.mic_off:
-                    self.micon.emit()
-                    break
-                speak(r)
+
+            delimiters = r"[\n,.:!?;]"  # Regular expression for multiple delimiters
+
+            for rt in re.split(delimiters, result):  # Split by multiple delimiters
+                rt = rt.strip()  # Remove leading/trailing spaces
+                if rt:  # Ignore empty strings from splitting
+                    if not b.mic_off:
+                        self.micon.emit()
+                        print("mic off")
+                        break
+                    speak(rt)
+
             
 
             prompt ="none"

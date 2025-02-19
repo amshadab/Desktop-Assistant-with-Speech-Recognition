@@ -45,21 +45,35 @@ def takecmd():
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print("Listening...")
-        if mic_off: return 
-        r.pause_threshold = 1
-        if mic_off: return 
+
+        if mic_off:
+            return 
+
+        # Adjusts for background noise to improve accuracy
+        r.adjust_for_ambient_noise(source, duration=1.5)
+
+        if mic_off:
+            return 
+
         try:
-            audio = r.listen(source, timeout=5, phrase_time_limit=5)  # Increased timeout
-            if mic_off: return 
+            # Increased timeout and phrase_time_limit for long sentences
+            audio = r.listen(source, timeout=10, phrase_time_limit=10)
+
+            if mic_off:
+                return 
+
         except sr.WaitTimeoutError:
-            speak("Listening timed out. Please try again.")
+            speak("Listening timed out. Please speak louder or try again.")
             return 
+
         except sr.UnknownValueError:
-            speak("Sorry, I did not understand that.")
+            speak("Sorry, I couldn't understand that. Could you repeat?")
             return 
+
         except sr.RequestError:
-            speak("Sorry, there was an issue with the request.")
+            speak("There seems to be an issue with the speech service. Check your internet connection.")
             return 
+
         return audio
     
 def recoginze(audio):

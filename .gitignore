@@ -1,12 +1,12 @@
 .venv
+venv
 tempCodeRunnerFile.py
 PyWhatKit_DB.txt
 tp.py
-desktop-assistant-c7034-firebase-adminsdk-oz26k-6bfdf9cd28.json
 userlogin.png
 config.py
 main_window.py
-tp2.py
 desktop-assistant-f315e-firebase-adminsdk-ilw8c-fb4eac3517.json
-backend1.py
-maingui2.py
+_pycache_
+*.exe
+tp2.py

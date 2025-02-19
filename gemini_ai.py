@@ -13,11 +13,17 @@ def aispeechmode(query):
     ai.configure(api_key=API_KEY)
 
 # Create a new model and chat object once
-    model = ai.GenerativeModel("gemini-pro")
+    model = ai.GenerativeModel("gemini-2.0-flash")
     chat = model.start_chat()
     try:
         # Send message to the API
-        response = chat.send_message(query)
+        query = f"""{query}
+
+        provide in 200 words or more.
+
+    """ 
+        response = chat.send_message(query, temperature=1)
+        print("ai mode excuted")
         print('Chatbot:', response.text)
             
     except StopCandidateException as e:

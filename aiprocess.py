@@ -3,7 +3,7 @@ from google.generativeai.types.generation_types import StopCandidateException
 import json
 import AppOpener
 from config import API_KEY
-
+import database
 # from main1 as 
 
 
@@ -48,7 +48,7 @@ def processcmd(command):
     ai.configure(api_key=API_KEY)
 
 # Create a new model and chat object once
-    model = ai.GenerativeModel("gemini-pro")
+    model = ai.GenerativeModel("gemini-2.0-flash")
     chat = model.start_chat()
     app_keys=scanapp()
     
@@ -59,7 +59,8 @@ def processcmd(command):
 # Convert the JSON data to a formatted string
     json_data_str = json.dumps(task_data, indent=2)
 
-
+    previous_chats=database.get_last_five_conversations()
+    
     # Refined prompt that asks the AI to match input with the correct command from the list
     prompt = (
     f"Your name is NOVA, You are a command assistant designed to help users, including those who may be illiterate or make mistakes in their input. "
@@ -84,14 +85,20 @@ def processcmd(command):
     f"{app_keys}\n\n"
     f"Task Data:\n"
     f"{json_data_str}\n\n"
+    f"Previous Chat History:\n"
+    f"{previous_chats}\n\n"
     f"User Input: {command}\n\n"
     f"Response:\n"
     f"- If the user wants to open a website and says something like 'go to <website_name>' or 'open <website_name>', return 'go to <website_name>.com'.\n"
     f"- For apps, return 'open <app_name>' or 'close <app_name>' if the app exists in {app_keys}, or inform the user that the app is not available if it's not in {app_keys}.\n"
     f"- If the command is incomplete, return 'Incomplete command: <correct_command>'.\n"
     f"- If the user asks a question related to any domain or field, interpret the question and return 'AI mode: <answer>'."
-    f"- If the user asks about themselves, return 'user'"
+    f"- If the user asks about themselves, return 'user'\n"
+    f"- If the command is incomplete or not recognized, generate a response yourself and return it.\n"
+    f"- If the user refers to something from previous messages, use the context from past interactions in {previous_chats}.\n"
+    f"- Maintain a conversational flow and answer accordingly."
 )
+
 
 
     try:
