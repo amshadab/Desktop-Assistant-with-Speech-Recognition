@@ -162,11 +162,11 @@
       ]
     },
     {
-      "command": "write <text>",
-      "description": "Writes the specified text.",
+      "command": "type <text>",
+      "description": "Types the specified text.",
       "examples": [
-        {"user_input": "I want to write Hello coders", "assistant_output": "write Hello coders"},
-        {"user_input": "write Hello World", "assistant_output": "write Hello World"}
+        {"user_input": "I type to write Hello coders", "assistant_output": "type Hello coders"},
+        {"user_input": "type Hello World", "assistant_output": "type Hello World"}
       ]
     }
   ]

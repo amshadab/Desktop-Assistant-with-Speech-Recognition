@@ -23,7 +23,7 @@ obj=None
 msg = None
 engine = pyttsx3.init("sapi5")
 commands = ["open", "shutdown", "ip address of my device", "minimise window","close window","maximise window","go to","search on google","search on wikipedia",
-            "current temperature","send message","ai mode","sleep","current date","restart","play video on youtube","help","close","send message","battery","current time","Incomplete","mute","unmute","exit","user","write"]
+            "current temperature","send message","ai mode","sleep","current date","restart","play video on youtube","help","close","send message","battery","current time","Incomplete","mute","unmute","exit","user","type"]
 # Text to speak function
 def set_speech_rate(rate):
     engine.setProperty('rate', rate)
@@ -433,7 +433,7 @@ command_actions={
     "help":help_function,
     "close":close_apps,
     "user":user_name,
-    "write":write_anything,
+    "type":write_anything,
     "Incomplete":incomplete_command,
     "exit":exit_fucntion
 }

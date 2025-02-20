@@ -33,7 +33,7 @@ commands_list = [
     "minimise window",
     "maximise window",
     "close window",
-    "write <text>",
+    "type <text>",
     "help",
     "exit"
 ]
@@ -80,7 +80,7 @@ def processcmd(command):
     f"- If the user says anything resembling 'help', such as 'run help function', 'show help', 'assist', or 'guide', return the 'help' command.\n"
     f"- If the user says anything resembling 'exit', 'no thanks', 'close', or any phrase indicating the intent to stop or exit the software, return 'exit'.\n"
     f"- If the user asks a question related to any domain or field, interpret the question and provide a relevant answer, returning it in the format: 'AI mode: <answer>'.\n\n"
-    f"- If the user wants to write something, return 'write <text>'. For example, if the user says 'I want to write Hello coders', return 'write Hello coders'.\n\n"
+    f"- If the user wants to type something, return 'type <text>'. For example, if the user says 'I want to type Hello coders', return 'type Hello coders'.\n\n"
     f"Commands List:\n"
     f"{commands_list}\n\n"
     f"Here is the app name mapping from the user's system (available apps):\n"
