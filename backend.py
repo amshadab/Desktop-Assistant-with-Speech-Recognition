@@ -45,35 +45,21 @@ def takecmd():
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print("Listening...")
-
-        if mic_off:
-            return 
-
-        # Adjusts for background noise to improve accuracy
-        r.adjust_for_ambient_noise(source, duration=1.5)
-
-        if mic_off:
-            return 
-
+        if mic_off: return 
+        r.pause_threshold = 1
+        if mic_off: return 
         try:
-            # Increased timeout and phrase_time_limit for long sentences
-            audio = r.listen(source, timeout=10, phrase_time_limit=10)
-
-            if mic_off:
-                return 
-
+            audio = r.listen(source, timeout=5, phrase_time_limit=5)  # Increased timeout
+            if mic_off: return 
         except sr.WaitTimeoutError:
-            speak("Listening timed out. Please speak louder or try again.")
+            speak("Listening timed out. Please try again.")
             return 
-
         except sr.UnknownValueError:
-            speak("Sorry, I couldn't understand that. Could you repeat?")
+            speak("Sorry, I did not understand that.")
             return 
-
         except sr.RequestError:
-            speak("There seems to be an issue with the speech service. Check your internet connection.")
+            speak("Sorry, there was an issue with the request.")
             return 
-
         return audio
     
 def recoginze(audio):
@@ -279,7 +265,7 @@ def help_function():
         
         "15. **Maximise window**\n"
         "    - Example: 'Maximise window'\n"
-        "    - Maximizes the currently active window.\n\n"
+        "    - Maximises the currently active window.\n\n"
         
         "16. **Close window**\n"
         "    - Example: 'Close window'\n"
@@ -334,6 +320,7 @@ def maximize():
         window = gw.getActiveWindow()
         if window:
             window.maximize()
+            print("success")
             return "Current Window is Maximized"
         else:
             return "Current window can't recognize"
@@ -371,7 +358,7 @@ def close_apps(app_name):
     try:
         captured_output = io.StringIO()
         sys.stdout = captured_output
-        # AppOpener.close(app_name)
+        AppOpener.close(app_name)
         sys.stdout = sys.__stdout__
         result = captured_output.getvalue().strip()        
         if "not running" in result:
@@ -420,7 +407,7 @@ command_actions={
     "search on wikipedia":wiki,
     "sleep":sleep,
     "minimise window":minimize,
-    "maximize":maximize,
+    "maximise window":maximize,
     "close window":closewindow,
     "go to":open_website,
     "search on google":google_search,

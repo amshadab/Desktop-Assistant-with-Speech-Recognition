@@ -1,11 +1,15 @@
 from PyQt5.QtWidgets import QApplication, QDialog, QLabel, QVBoxLayout, QHBoxLayout, QPushButton,QLineEdit
 from PyQt5 import QtCore,QtWidgets
+from PyQt5.QtCore import Qt
 import sys
 
 class CustomMessageBox(QDialog):
     def __init__(self, parent=None, text="", x=400, y=400, B1="OK", B2="Cancel"):
         super().__init__(parent)
         self.setWindowTitle("Custom Message Box")
+        self.setWindowFlags(Qt.Window | Qt.WindowCloseButtonHint | Qt.WindowStaysOnTopHint)
+        self.setGeometry(0, 0, 300, 300)
+
         
         # Layouts
         self.layout = QVBoxLayout()

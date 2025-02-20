@@ -1,4 +1,4 @@
-import sys,os
+import sys,os,threading
 import time,re
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout,QStackedWidget, QLabel, QPushButton, QTextEdit,  QScrollArea, QFrame
 from PyQt5.QtCore import Qt, QSize, QThread, pyqtSignal,QPropertyAnimation
@@ -534,15 +534,14 @@ class ChatThread(QThread):
                     number = CustomInputBox.show_input_dialog(f"The provided phone number have only {len(number)} digits Please Enter again")
         
                 
-                speak("This process may take a few seconds and during this process i can't do any other work")
+                speak("This process may take a few seconds")
                 now = datetime.datetime.now()
-                future_time = now + datetime.timedelta(minutes=2)
-                time_hour = future_time.hour
-                time_minute = future_time.minute
+                
 
                 country_code="+91"
                 number=f"{country_code}{number}"
-                kit.sendwhatmsg(number, message, time_hour, time_minute)
+                threading.Thread(target=kit.sendwhatmsg, args=(number, message, now.hour, now.minute+1,1)).start()
+                time.sleep(1)
 
     def __init__(self,obj):
         super().__init__()
@@ -614,6 +613,9 @@ class ChatThread(QThread):
 
             if result.__contains__("sending  message"): 
                 self.send_message(result.replace("sending  message","",1))
+                result += " with in one minute..."
+
+
 
                          
                 # result = "message send" 
