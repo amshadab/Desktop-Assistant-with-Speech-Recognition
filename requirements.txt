@@ -12,3 +12,4 @@ pycaw
 firebase-admin
 pyrebase4
 PyQt5
+pyautogui

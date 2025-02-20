@@ -160,6 +160,14 @@
         {"user_input": "do you know me?", "assistant_output": "user"},
         {"user_input": "who am I?", "assistant_output": "user"}
       ]
+    },
+    {
+      "command": "write <text>",
+      "description": "Writes the specified text.",
+      "examples": [
+        {"user_input": "I want to write Hello coders", "assistant_output": "write Hello coders"},
+        {"user_input": "write Hello World", "assistant_output": "write Hello World"}
+      ]
     }
   ]
 }

@@ -10,6 +10,7 @@ import aiprocess as ap
 import AppOpener
 import gemini_ai
 import time
+import pyautogui
 import io
 from database import get_username
 import sys
@@ -22,7 +23,7 @@ obj=None
 msg = None
 engine = pyttsx3.init("sapi5")
 commands = ["open", "shutdown", "ip address of my device", "minimise window","close window","maximise window","go to","search on google","search on wikipedia",
-            "current temperature","send message","ai mode","sleep","current date","restart","play video on youtube","help","close","send message","battery","current time","Incomplete","mute","unmute","exit","user"]
+            "current temperature","send message","ai mode","sleep","current date","restart","play video on youtube","help","close","send message","battery","current time","Incomplete","mute","unmute","exit","user","write"]
 # Text to speak function
 def set_speech_rate(rate):
     engine.setProperty('rate', rate)
@@ -393,7 +394,13 @@ def exit_fucntion():
     
 # def query_fucn(answer):
 #     return answer
+
+def write_anything(text):
     
+    # Type the modified text
+    pyautogui.write(text, interval=0.1)
+    return "Your text is successfully written"
+
     
 def current_date():
     date=date=datetime.datetime.now().strftime("%B %d, %Y")
@@ -426,9 +433,11 @@ command_actions={
     "help":help_function,
     "close":close_apps,
     "user":user_name,
+    "write":write_anything,
     "Incomplete":incomplete_command,
     "exit":exit_fucntion
 }
+
 
 def input_from_gui(user_input,self):
     global obj
