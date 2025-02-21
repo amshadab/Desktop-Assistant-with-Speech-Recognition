@@ -315,6 +315,55 @@ def delete_conversation():
         traceback.print_exc()
         return f"Error deleting conversation: {e}"
 
+import firebase_admin
+from firebase_admin import auth, credentials, firestore
+
+# Initialize Firebase Admin SDK (Only needs to be done once)
+try:
+    firebase_admin.get_app()
+except ValueError:
+    cred = credentials.Certificate("path/to/serviceAccountKey.json")  # Replace with your JSON key file
+    firebase_admin.initialize_app(cred)
+
+db = firestore.client()
+
+def delete_account():
+    try:
+        # Read and store user_id from user_config.txt
+        with open("user_config.txt", "r") as fr:
+            user_id = fr.read().strip()
+
+        if not user_id:
+            print("No user ID found.")
+            return "No user ID found."
+
+        # Delete user's conversations subcollection
+        conversations_ref = db.collection('users').document(user_id).collection('conversations')
+        conversations = conversations_ref.stream()
+        for conv in conversations:
+            conv.reference.delete()
+
+        print("User conversations deleted.")
+
+        # Delete user's document from Firestore
+        db.collection('users').document(user_id).delete()
+        print("User document deleted from Firestore.")
+
+        # Delete user from Firebase Authentication
+        auth.delete_user(user_id)
+        print("User deleted from Firebase Authentication.")
+
+        # Clear user_config.txt after deletion
+        with open("user_config.txt", "w") as fw:
+            fw.write("")
+
+        print("User account successfully deleted.")
+
+        return 0
+    except Exception as e:
+        print(f"Error deleting account: {e}")
+        return str(e)
+
 
 if __name__ == "__main__":
-    print(delete_conversation())
+    print(delete_account())
