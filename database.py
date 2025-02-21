@@ -279,7 +279,42 @@ def get_last_five_conversations():
 
     return last_five_conversations_reversed
 
+def get_user_id_from_config():
+    """Reads the user ID from user_config.txt"""
+    try:
+        with open("user_config.txt", "r") as file:
+            user_id = file.read().strip()
+        return user_id
+    except FileNotFoundError:
+        return None  # Return None instead of printing
+
+def delete_conversation():
+    """Deletes the user's conversation from Firestore and returns status message."""
+    try:
+        # Step 1: Get user ID from user_config.txt
+        user_id = get_user_id_from_config()
+        if not user_id:
+            return "Error: No user ID found in user_config.txt."
+
+        # Step 2: Reference the user's conversation subcollection
+        conversations_ref = db.collection("users").document(user_id).collection("conversations")
+        conversations = conversations_ref.stream()
+
+        # Step 3: Check if conversations exist and delete them
+        deleted_count = 0
+        for conversation in conversations:
+            conversation.reference.delete()
+            deleted_count += 1
+        
+        if deleted_count > 0:
+            return f"Deleted {deleted_count} conversation(s) for user {user_id}."
+        else:
+            return f"No conversations found for user {user_id}."
+
+    except Exception as e:
+        traceback.print_exc()
+        return f"Error deleting conversation: {e}"
 
 
 if __name__ == "__main__":
-    print(get_last_five_conversations())
+    print(delete_conversation())
