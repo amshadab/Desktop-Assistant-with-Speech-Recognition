@@ -188,9 +188,9 @@ class ChatWindow(QWidget,QThread):
         # Create a QWidget to act as the message bubble
         bubble_frame = QFrame()
         bubble_layout = QHBoxLayout(bubble_frame)
-        if message.startswith("You:"): 
+        if message.startswith("You: "): 
             is_sent= True
-            self.message_history.append(message.replace("You:",""))
+            self.message_history.append(message.replace("You: ",""))
 
 
         
@@ -238,6 +238,7 @@ class NovaInterface(QWidget):
         global movie
         movie = QMovie("icons/mic_ani.gif")
         movie.speed = -500
+        global in_custom_message_box
         self.state = QLabel("")
         self.state.setStyleSheet(f"""
                         color:{themeColor};
@@ -260,7 +261,7 @@ class NovaInterface(QWidget):
                     """)
     def changeEvent(self, event):
         if event.type() == QEvent.WindowStateChange:
-            if self.isMinimized():
+            if self.isMinimized() and not in_custom_message_box:
                 print("Window minimized")
                 self.show_popup()
             elif self.isMaximized():
@@ -269,7 +270,7 @@ class NovaInterface(QWidget):
                 print("Window restored")
 
         if event.type() == QEvent.ActivationChange:
-            if not self.isActiveWindow():
+            if not self.isActiveWindow() and not in_custom_message_box:
                 print("Window lost focus")
                 self.show_popup()
             else:
@@ -455,7 +456,9 @@ class NovaInterface(QWidget):
 
 
     def delete_account(self):
+        global in_custom_message_box
         try:
+            in_custom_message_box = True
             result = CustomMessageBox.show_message(text="Are you sure you want to delete your account?", B1="Yes", B2="No")
         
             if result == 1:  # User clicked Yes
@@ -469,6 +472,8 @@ class NovaInterface(QWidget):
         
         except Exception as e:
             print(f"Error during account deletion: {e}")
+        finally:
+            in_custom_message_box = False
 
     def show_popup(self):
         self.is_popup_mode = True
@@ -605,7 +610,13 @@ class NovaInterface(QWidget):
 
     # Toggle mute/unmute
     def sleep_(self):
+        global in_custom_message_box
+        in_custom_message_box = True
+
         result=CustomMessageBox.show_message(self,"Are you sure you want to Sleep your pc")
+
+        in_custom_message_box = False
+        
         
         try:
             if result==1:
@@ -618,8 +629,11 @@ class NovaInterface(QWidget):
         speak(ret)       
         
     def shutdown_(self):
+        global in_custom_message_box
+        in_custom_message_box = True
         
         result =  CustomMessageBox.show_message(self,"Are you sure you want to shutdown your pc")
+        in_custom_message_box = False
         
         try:
             if result==1:
@@ -632,7 +646,10 @@ class NovaInterface(QWidget):
         speak(ret)
         
     def restart_(self):
+        global in_custom_message_box
+        in_custom_message_box = True
         result=CustomMessageBox.show_message(self,"Are you sure you want to Resatart your pc")
+        in_custom_message_box = False
         try:
             if result == 1:
                 os.system("shutdown /r /t 0")
@@ -730,7 +747,7 @@ class ChatThread(QThread):
                 flag =  True
             self.state.emit("Thinking...")
             
-            self.message_received.emit("You:"+query)
+            self.message_received.emit("You: "+query)
             result = input_from_gui(query,self).replace("*"," ")
             if result =="restart_": 
                 self.restart.emit()
