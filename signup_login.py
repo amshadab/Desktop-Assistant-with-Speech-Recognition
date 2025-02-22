@@ -1,6 +1,6 @@
 import webbrowser
 from PyQt5 import QtCore,  QtWidgets
-import sys,os
+import sys,os,time
 import database as db
 from  CustomMessageBox import CustomMessageBox
 
@@ -342,7 +342,8 @@ Hello,  You're now connected to NOVA. Let's get things done effortlessly.
         self.label_goto_signup.setText(_translate("MainWindow", "Don't have an account?"))
 
     def open_main(self):
-        QtWidgets.QApplication.quit()                 
+        MainWindow.close()
+                   
         if(os.path.exists("maingui.exe")):
                         os.system("maingui.exe")
         else:            

@@ -70,7 +70,14 @@ def sign_up(email, password, first_name, last_name, gender):
     except Exception as e:
         print(f"Error during sign-up: {e}")
         traceback.print_exc()
-        return str(e)
+        if "EMAIL_EXISTS" in str(e):
+            return "Email already exists"
+        elif "WEAK_PASSWORD" in str(e):
+            return "Password is too weak"
+        elif "TOO_MANY_ATTEMPTS_TRY_LATER" in str(e):
+            return "Too many attempts, try again later"        
+        else:
+            return str(e)
 
 
 # Login Function
@@ -92,7 +99,20 @@ def log_in(email, password):
     except Exception as e:
         print(f"Error during login: {e}")
         traceback.print_exc()
-        return str(e)
+        if "INVALID_EMAIL" in str(e):
+            return "Invalid email"
+        elif "EMAIL_NOT_FOUND" in str(e):
+            return "Email not found"
+        elif "INVALID_PASSWORD" in str(e):
+            return "Invalid password"
+        elif "USER_NOT_FOUND" in str(e):
+            return "User not found"
+        elif "INVALID_LOGIN_CREDENTIAL" in str(e):
+            return "Invalid login credentials"
+        elif "TOO_MANY_ATTEMPTS_TRY_LATER" in str(e):
+            return "Too many attempts, try again later"        
+        else:
+            return str(e)
     
 def save_conversation(user_input, assistant_response):
     try:

@@ -1,8 +1,9 @@
 import sys,os,threading
-import time,re
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout,QStackedWidget, QLabel, QPushButton, QTextEdit,  QScrollArea, QFrame
-from PyQt5.QtCore import Qt, QSize, QThread, pyqtSignal,QPropertyAnimation
+import time,re,datetime
+from PyQt5.QtWidgets import QApplication, QWidget,QMenu, QVBoxLayout,QAction, QHBoxLayout,QStackedWidget, QLabel, QPushButton, QTextEdit,  QScrollArea, QFrame
+from PyQt5.QtCore import Qt, QSize, QThread, pyqtSignal,QPropertyAnimation,QEvent
 from PyQt5.QtGui import QIcon,QMovie,QPixmap
+from PyQt5 import QtGui
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 from comtypes import CLSCTX_ALL
 import ctypes
@@ -13,6 +14,7 @@ import database as db
 BtnTextFont = '25px'
 toggleMic = True
 themeColor = '#0085FF'
+speaking = True
 prompt = "none"
 thread = True
 btnStyle = f"background-color: #07151E; font-size: {BtnTextFont}; color: {themeColor}; padding: 5px; border-radius:30px; border:5px solid {themeColor}"
@@ -95,9 +97,12 @@ class ChatWindow(QWidget,QThread):
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setStyleSheet("background-color: #0F1C25; border: none;")
+        self.message_history = []
+
 
         # Widget to hold the layout of chat bubbles
         self.chat_container = QWidget()
+        
         self.chat_layout = QVBoxLayout(self.chat_container)
         print(self.maximumWidth())
         self.chat_layout.setContentsMargins(int(self.maximumWidth()*0.00002),0,int(self.maximumWidth()*0.00002),0)
@@ -127,7 +132,6 @@ class ChatWindow(QWidget,QThread):
     
         layout.addLayout(self.input_layout)
         self.setLayout(layout)
-
         # Styling
         self.setStyleSheet("""
             QTextEdit {
@@ -171,7 +175,11 @@ class ChatWindow(QWidget,QThread):
         # print(bubble_widget.height())
         self.scroll_area.verticalScrollBar().setSliderPosition(self.scroll_area.verticalScrollBar().maximum()+(bubble_widget.height()*20))
     
-    
+    def get_last_message(self):
+        if self.message_history:
+            return self.message_history[-1]  # Return last message from history list
+        return ""
+
     
 
     
@@ -180,10 +188,15 @@ class ChatWindow(QWidget,QThread):
         # Create a QWidget to act as the message bubble
         bubble_frame = QFrame()
         bubble_layout = QHBoxLayout(bubble_frame)
-        if message.startswith("You:"): is_sent= True
+        if message.startswith("You:"): 
+            is_sent= True
+            self.message_history.append(message.replace("You:",""))
+
 
         
         bubble = QLabel(message)
+        bubble.setTextInteractionFlags(Qt.TextSelectableByMouse)
+
         bubble.setWordWrap(True)
         if not is_sent:
             bubble.setFixedWidth(int(self.scroll_area.width()*0.5))
@@ -205,6 +218,18 @@ class ChatWindow(QWidget,QThread):
 
         bubble_layout.setContentsMargins(10, 5, 10, 5)
         return bubble_frame
+    def delete_conversation(self):
+        # Delete all widgets inside the chat_layout
+        db.delete_conversation()
+        while self.chat_layout.count():
+            item = self.chat_layout.takeAt(0)
+            widget = item.widget()
+            if widget:
+                widget.deleteLater()  # Safe deletion
+
+        # Optionally, force a UI update
+        self.chat_container.update()
+
 
 
 # NovaInterface with chat integration
@@ -222,11 +247,10 @@ class NovaInterface(QWidget):
         super().__init__()
         self.chat_window = ChatWindow()
         self.initUI()
-        volume.SetMute(False, None)
-        self.chat_window.message_input.installEventFilter(self)
-        self.is_popup_mode = False
+        
         # demo(self)
         state = QLabel("Listening...")
+        self.chat_window.message_input.installEventFilter(self)
         
         
         state.setStyleSheet(f"""
@@ -234,6 +258,24 @@ class NovaInterface(QWidget):
                         font-size: 50px;
                         font-weight: bold;
                     """)
+    def changeEvent(self, event):
+        if event.type() == QEvent.WindowStateChange:
+            if self.isMinimized():
+                print("Window minimized")
+                self.show_popup()
+            elif self.isMaximized():
+                print("Window maximized")
+            else:
+                print("Window restored")
+
+        if event.type() == QEvent.ActivationChange:
+            if not self.isActiveWindow():
+                print("Window lost focus")
+                self.show_popup()
+            else:
+                print("Window gained focus")
+
+        super().changeEvent(event)
     def initUI(self):
         self.setWindowTitle('NOVA')
         self.setStyleSheet("background-color: #0F1C25; color: #ffffff;")
@@ -247,30 +289,69 @@ class NovaInterface(QWidget):
         top_layout = QHBoxLayout()
 
         # SK logo (top-left corner)
-        self.sk_label = QLabel("U")
+        self.sk_label = QPushButton("U")
         self.sk_label.setStyleSheet(f"background-color: #07151E; color: {themeColor}; font-size:{BtnTextFont};  padding: 5px; border-radius: 20px; border:5px solid {themeColor};")
         self.sk_label.setFixedSize(50, 50)
-        self.sk_label.setAlignment(Qt.AlignCenter)
+        self.sk_label.clicked.connect(self.show_user_menu)
+
+        # Create menu
+        self.user_menu = QMenu(self)
+        self.user_menu.setStyleSheet("""
+            QMenu {
+                background-color: #07151E;
+                border: 2px solid #0085FF;    /* Changed border color to red */
+                border-radius: 5px;
+            }
+            QMenu::item {
+                padding: 10px 30px;      /* Reduced padding to make button smaller */
+                color: white;              /* Text color red */
+                font-size: 16px;         /* Slightly smaller font */
+                font-weight: bold;
+            }
+            QMenu::item:selected {
+                background-color:  #0085FF;    /* Changed hover background to red */
+                color: white;
+            }
+            QMenu::separator {
+                height: 2px;
+                background-color: #0085FF;
+                margin: 5px 15px;
+            }
+        """)
+
+        # Add logout action
+        logout_action = QAction('Logout', self)
+        logout_action.triggered.connect(self.logout)
+        self.user_menu.addAction(logout_action)
+
+        separator = self.user_menu.addSeparator()
+        separator.setObjectName("blueMenuSeparator")
+
+        delete_action = QAction('Delete', self)
+        delete_action.triggered.connect(self.delete_account)
+        self.user_menu.addAction(delete_action)
 
         # NOVA label (centered)
         self.nova_icon = QLabel()
         img = QPixmap('icons/nova_no_bg.png')
         self.nova_icon.setPixmap(img)
+        self.nova_icon.setStyleSheet("background-color: white; border-radius: 30px; padding: 5px;")
         nova_label = QLabel("NOVA")
         
         nova_label.setStyleSheet(f"color: {themeColor}; font-size: 30px; font-weight: bold;")
 
-        history_button = QPushButton('Show Chat History')
-        history_button.setStyleSheet(f"background-color: #07151E; font-size: {BtnTextFont}; color: {themeColor}; padding: 5px; border-radius:20px; border:5px solid {themeColor}")
-        history_button.setIcon(QIcon('icons/menu.png'))
-        history_button.setIconSize(QSize(30, 30))
+        delete_button = QPushButton()
+        delete_button.setStyleSheet(f"background-color: #07151E; font-size: {BtnTextFont}; color: {themeColor}; padding: 5px; border-radius:20px; border:5px solid {themeColor}")
+        delete_button.setIcon(QIcon('icons/delete.png'))
+        delete_button.setIconSize(QSize(30, 30))
+        delete_button.clicked.connect(self.chat_window.delete_conversation)
 
         # Add widgets to the top layout
         top_layout.addWidget(self.nova_icon)
         top_layout.addWidget(nova_label)
         top_layout.addStretch()
-        top_layout.addWidget(history_button)
         top_layout.addStretch()
+        top_layout.addWidget(delete_button)
         top_layout.addWidget(self.sk_label)  
 
 
@@ -283,7 +364,7 @@ class NovaInterface(QWidget):
         # Bottom but.bottom_layout
         self.bottom_layout = QHBoxLayout()
         
-        # history_button.setBackgroundRole(Qt.black)
+        # delete_button.setBackgroundRole(Qt.black)
 
         self.text_mode_button = QPushButton()
         self.text_mode_button.setStyleSheet(btnStyle)
@@ -352,6 +433,42 @@ class NovaInterface(QWidget):
         main_layout = QVBoxLayout()
         main_layout.addWidget(self.stacked_widget)
         self.setLayout(main_layout)
+    
+
+
+    
+    def logout(self):
+        try:
+            # Delete the user_config.txt file
+            if os.path.exists('user_config.txt'):
+                os.remove('user_config.txt')
+            
+            # Close the current window
+            self.close()
+            
+            # Start the signup_login.py script
+            python_executable = sys.executable
+            os.execl(python_executable, python_executable, "signup_login.py")
+        
+        except Exception as e:
+            print(f"Error during logout: {e}")
+
+
+    def delete_account(self):
+        try:
+            result = CustomMessageBox.show_message(text="Are you sure you want to delete your account?", B1="Yes", B2="No")
+        
+            if result == 1:  # User clicked Yes
+                db.delete_account() 
+                if os.path.exists('user_config.txt'):
+                    os.remove('user_config.txt')
+                
+                self.close()
+                python_executable = sys.executable
+                os.execl(python_executable, python_executable, "signup_login.py")
+        
+        except Exception as e:
+            print(f"Error during account deletion: {e}")
 
     def show_popup(self):
         self.is_popup_mode = True
@@ -430,7 +547,17 @@ class NovaInterface(QWidget):
                 # Allow line breaks with Shift + Enter
                 self.chat_window.message_input.insertPlainText("\n")
                 return True
+            elif event.key() == Qt.Key_Up:  # Handle Up Arrow Key
+                # Retrieve the last message from history (assuming self.last_message stores it)
+                last_message = self.chat_window.get_last_message()  # Implement this method
+                if last_message:
+                    self.chat_window.message_input.setPlainText(last_message)
+                    self.chat_window.message_input.moveCursor(QtGui.QTextCursor.End)  # Move cursor to end
+                return True  # Stop further processing of the event
+
         return super().eventFilter(obj, event)
+
+
 
     
     def state_(self,text):
@@ -458,12 +585,14 @@ class NovaInterface(QWidget):
         print("b.mic_off:"+ str(b.mic_off))
 
     def toggle_mute(self):
-        
+        global speaking
 
         # Get the current mute state
-        is_muted = volume.GetMute()
-        volume.SetMute(not is_muted, None)
-        if is_muted:
+        # is_muted = volume.GetMute()
+        # volume.SetMute(not is_muted, None)
+        speaking = not speaking
+
+        if speaking:
             self.mute_button.setIcon(QIcon('icons/mute.png'))
             self.popup.mute_button.setIcon(QIcon('icons/mute.png'))
 
@@ -472,7 +601,7 @@ class NovaInterface(QWidget):
             self.popup.mute_button.setIcon(QIcon('icons/unmute.png'))
             
         # Toggle the mute state
-        print(f"Muted: {not is_muted}")
+        print(f"Muted: {not speaking}")
 
     # Toggle mute/unmute
     def sleep_(self):
@@ -513,9 +642,26 @@ class NovaInterface(QWidget):
             ret= f"Something Went wrong {e}"
         self.chat_window.add_message(ret)
         speak(ret)
+    def show_user_menu(self):
+        # Show the menu below the SK label
+        self.user_menu.exec_(self.sk_label.mapToGlobal(self.sk_label.rect().bottomLeft()))
+    def send_message(self,message):
+        speak("Please provide the phone number to which I should send messages.")
+        number = CustomInputBox.show_input_dialog("Please provide the phone number to which I should send messages")
+        while (len(number)<=9):
+            number = CustomInputBox.show_input_dialog(f"The provided phone number have only {len(number)} digits Please Enter again")
+
+        speak("This process may take a few seconds")
+        now = datetime.now()
+        country_code="+91"
+        number=f"{country_code}{number}"
+        threading.Thread(target=kit.sendwhatmsg, args=(number, message, now.hour, now.minute+1,1)).start()
+        self.chat_window.add_message("Message sent to "+number+"\nwill be delivered in a minute")
+        time.sleep(1)
 
     
 #     result = CustomMessageBox.show_message(self,"Welcome to NOVA\n\nNOVA is an AI assistant which can control your desktop based on your command.")
+    
 
 
 
@@ -527,21 +673,8 @@ class ChatThread(QThread):
     sleep = pyqtSignal()
     state = pyqtSignal(str)
     name = pyqtSignal(str)
-    def send_message(self,message):
-                speak("Please provide the phone number to which I should send messages.")
-                number = CustomInputBox.show_input_dialog("Please provide the phone number to which I should send messages")
-                while (len(number)<=9):
-                    number = CustomInputBox.show_input_dialog(f"The provided phone number have only {len(number)} digits Please Enter again")
-        
-                
-                speak("This process may take a few seconds")
-                now = datetime.datetime.now()
-                
-
-                country_code="+91"
-                number=f"{country_code}{number}"
-                threading.Thread(target=kit.sendwhatmsg, args=(number, message, now.hour, now.minute+1,1)).start()
-                time.sleep(1)
+    send_message = pyqtSignal(str)
+    
 
     def __init__(self,obj):
         super().__init__()
@@ -550,6 +683,7 @@ class ChatThread(QThread):
      global prompt
      global ret
      global thread
+     global speaking
      thread = True
      try:
         self.name.emit(db.get_user_initials())
@@ -564,7 +698,7 @@ class ChatThread(QThread):
                 # Decrypt the data
                     user_input = db.decrypt_data(encrypted_user_input.encode('utf-8')) if isinstance(encrypted_user_input, str) else db.decrypt_data(encrypted_user_input)
                     assistant_response = db.decrypt_data(encrypted_assistant_response.encode('utf-8')) if isinstance(encrypted_assistant_response, str) else db.decrypt_data(encrypted_assistant_response)
-                    self.message_received.emit("You:"+user_input)
+                    self.message_received.emit(user_input)
                     self.message_received.emit(assistant_response)
                 except Exception as decryption_error:
                     print(f"Decryption error for conversation ID {conv.id}: {decryption_error}")
@@ -612,8 +746,8 @@ class ChatThread(QThread):
                 result = "sleeping your computer"
 
             if result.__contains__("sending  message"): 
-                self.send_message(result.replace("sending  message","",1))
-                result += " with in one minute..."
+                self.send_message.emit(result.replace("sending  message","",1))
+                
 
 
 
@@ -621,7 +755,7 @@ class ChatThread(QThread):
                 # result = "message send" 
 
             
-            db.save_conversation(query,result)
+            db.save_conversation("You: "+ query,result)
             for r in result.split("\n"):
                 self.message_received.emit(r)
                 time.sleep(0.05)
@@ -634,7 +768,7 @@ class ChatThread(QThread):
             for rt in re.split(delimiters, result):  # Split by multiple delimiters
                 rt = rt.strip()  # Remove leading/trailing spaces
                 if rt:  # Ignore empty strings from splitting
-                    if not b.mic_off:
+                    if (not b.mic_off ) or not speaking:
                         self.micon.emit()
                         print("mic off")
                         break
@@ -652,7 +786,8 @@ class ChatThread(QThread):
             if toggleMic:
                 self.micon.emit()
             time.sleep(1)
-            speak("Sir, Do you have any other work")
+            if toggleMic:
+                speak("Sir, Do you have any other work")
           
      except Exception as e:
             print(e)
@@ -675,6 +810,7 @@ if __name__ == '__main__':
         chat_thread.sleep.connect(ex.sleep_)
         chat_thread.state.connect(ex.state_)
         chat_thread.name.connect(ex.set_name)
+        chat_thread.send_message.connect(ex.send_message)
         chat_thread.start()
         sys.exit(app.exec_())
     except Exception as e:

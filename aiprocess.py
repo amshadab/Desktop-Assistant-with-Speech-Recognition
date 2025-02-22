@@ -79,7 +79,7 @@ def processcmd(command):
     f"- If the user gives an incomplete command, such as 'open app' without specifying the app, respond with 'Incomplete command: open <app_name>'. This will guide the user towards the correct format.\n"
     f"- If the user says anything resembling 'help', such as 'run help function', 'show help', 'assist', or 'guide', return the 'help' command.\n"
     f"- If the user says anything resembling 'exit', 'no thanks', 'close', or any phrase indicating the intent to stop or exit the software, return 'exit'.\n"
-    f"- If the user asks a question related to any domain or field, interpret the question and provide a relevant answer, returning it in the format: 'AI mode: <answer>'.\n\n"
+    f"- If the user asks a question related to any domain or field, interpret the question and provide a relevant answer in 200 words or more, returning it in the format: 'AI mode: <answer>'.\n\n"
     f"- If the user wants to type something, return 'type <text>'. For example, if the user says 'I want to type Hello coders', return 'type Hello coders'.\n\n"
     f"Commands List:\n"
     f"{commands_list}\n\n"

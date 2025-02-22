@@ -12,7 +12,8 @@ import gemini_ai
 import time
 import pyautogui
 import io
-from database import get_username
+import datetime
+from database import *
 import sys
 import psutil
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
@@ -32,6 +33,7 @@ def speak(text,speed=200):
     set_speech_rate(speed)
     
     if engine._inLoop:
+        time.sleep(1)
         engine.endLoop()
     else:
         engine.stop()
@@ -85,7 +87,7 @@ def recoginze(audio):
     return query.lower()
 
 def wish():
-    now = int(datetime.datetime.now().hour)
+    now = int(datetime.now().hour)
     if 5 <= now < 12:
         speak("Good Morning")
     elif 12 <= now < 17:
@@ -272,7 +274,11 @@ def help_function():
         "    - Example: 'Close window'\n"
         "    - Closes the currently active window.\n\n"
         
-        "17. **No thanks exit**\n"
+          "17. **type <text>**\n"
+        "     - Example: 'Type Hello, my name is Nova'\n"
+        "     - Automatically types the specified text as if you typed it manually..\n\n"
+        
+         "18. **No thanks exit**\n"
         "    - Example: 'No thanks exit'\n"
         "    - Exits the assistant.\n\n"
         
